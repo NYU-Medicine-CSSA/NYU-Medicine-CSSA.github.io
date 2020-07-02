@@ -1,0 +1,1888 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes" ?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+  <channel>
+    <title>Posts | CSSA NYU Medicine</title>
+    <link>https://NYU-Medicine-CSSA.github.io/post/</link>
+      <atom:link href="https://NYU-Medicine-CSSA.github.io/post/index.xml" rel="self" type="application/rss+xml" />
+    <description>Posts</description>
+    <generator>Source Themes Academic (https://sourcethemes.com/academic/)</generator><language>en-us</language><lastBuildDate>Fri, 20 Mar 2020 00:00:00 +0000</lastBuildDate>
+    <image>
+      <url>https://NYU-Medicine-CSSA.github.io/images/icon_hu4b7d6a561d3ec3249b8edd16cd71f089_104323_512x512_fill_lanczos_center_2.png</url>
+      <title>Posts</title>
+      <link>https://NYU-Medicine-CSSA.github.io/post/</link>
+    </image>
+    
+    <item>
+      <title>A Machine Learning Algothrim for Removing the Outliers in Functional Data</title>
+      <link>https://NYU-Medicine-CSSA.github.io/post/fda/</link>
+      <pubDate>Fri, 20 Mar 2020 00:00:00 +0000</pubDate>
+      <guid>https://NYU-Medicine-CSSA.github.io/post/fda/</guid>
+      <description>&lt;h2 id=&#34;1-introduction&#34;&gt;1. Introduction&lt;/h2&gt;
+&lt;p&gt;The effects of outliers in the functional data analysis are well aware by statisticians in recent years, there have been some works of literature on finding outliers in the functional data. However, most of the literature focused on the detection of the extreme values in the functional data in a univariate case. For example, &lt;em&gt;Manuel Febrero Environmetrics 2008; 19: 331-345&lt;/em&gt; were focusing on the detection of extreme values that is abnormally large or small compared with the rest of the values. &lt;em&gt;Ana Arribas-Gil Biostatistics, Volume 15, Issue 4, October 2014&lt;/em&gt; were focusing on the detection of shape outliers (defined by different shape from the rest of the sample).
+Our method of outlier detection and imputation finds a way to detect the outlier due to the misfunction of the medical devices or detaching of the devices from the patients, which not necessarily produce extreme values or differences in shapes, but a graduate changes of the trend.&lt;/p&gt;
+&lt;p&gt;Our method was inspired by real data acquired from the Intensive Care Unite. The data was generated from the medical device that attached to the patients&amp;rsquo; hand or head and measured the oxygen level and carbon dioxide level during the CPR procedure.&lt;/p&gt;
+&lt;h2 id=&#34;2-objective&#34;&gt;2. Objective&lt;/h2&gt;
+&lt;p&gt;We proposed a voting method to detect different types of outliers in the real data. We then evaluate the algorithm using some simulated data.&lt;/p&gt;
+&lt;h2 id=&#34;3-types-of-the-outliers-in-the-real-data&#34;&gt;3. Types of the outliers in the real data&lt;/h2&gt;
+&lt;p&gt;Misfunction and detaching of the devices during the CPR may produce different kinds of outliers in terms of their shape, values, and trend. We attached some of the typical examples of the outliers in the real data.&lt;/p&gt;
+&lt;h3 id=&#34;31-consecutive-jumps-during-the-measuring-time&#34;&gt;3.1 Consecutive jumps during the measuring time&lt;/h3&gt;
+&lt;pre&gt;&lt;code class=&#34;language-{r,&#34;&gt;knitr::include_graphics(&amp;quot;o1.png&amp;quot;)
+knitr::include_graphics(&amp;quot;o2.png&amp;quot;)
+&lt;/code&gt;&lt;/pre&gt;
+&lt;p&gt;This kind of jump in the data is not the most common one but the one that is easiest to solve. Since there are only a few points that lie away from the trend of the data, we could simply remove it by fitting a non-parametric regression using kernel and splines, and then remove the points that at preset times away from the $\mu$ at that time point.&lt;/p&gt;
+&lt;h3 id=&#34;32-nonconsecutive-jumps-during-the-measuring-time&#34;&gt;3.2 Nonconsecutive jumps during the measuring time&lt;/h3&gt;
+&lt;pre&gt;&lt;code class=&#34;language-{r,&#34;&gt;knitr::include_graphics(&amp;quot;o3.png&amp;quot;)
+knitr::include_graphics(&amp;quot;o4.png&amp;quot;)
+&lt;/code&gt;&lt;/pre&gt;
+&lt;p&gt;There are two examples of nonconsecutive jumps during the measuring time, which are more common ones in the real data. Both curves on the left and right show clear patterns of the trend. Even though the number of outliers is more than the first scenario, the general trends of the data were not corrupted by the outliers. The outliers can be found and detected by fitting smooth curve, such as a none-parametric spline with a small number of the knots, and applying the previous standard to remove the outliers&lt;/p&gt;
+&lt;h3 id=&#34;33-jumps-that-corrupt-the-trend-of-the-data&#34;&gt;3.3 Jumps that corrupt the trend of the data&lt;/h3&gt;
+&lt;pre&gt;&lt;code class=&#34;language-{r,&#34;&gt;knitr::include_graphics(&amp;quot;o5.png&amp;quot;)
+knitr::include_graphics(&amp;quot;o6.png&amp;quot;)
+&lt;/code&gt;&lt;/pre&gt;
+&lt;p&gt;These kinds of jumps are the ones that hard to deal with. First of all, the true trend is hard to identify. Moreover, the observed values were all pretty far away from some expected value after fitting a smooth function.&lt;/p&gt;
+&lt;h3 id=&#34;34-unexpected-jumps-due-to-a-large-number-of-outliers&#34;&gt;3.4 Unexpected jumps due to a large number of outliers&lt;/h3&gt;
+&lt;pre&gt;&lt;code class=&#34;language-{r,&#34;&gt;knitr::include_graphics(&amp;quot;o7.png&amp;quot;)
+knitr::include_graphics(&amp;quot;o8.png&amp;quot;)
+&lt;/code&gt;&lt;/pre&gt;
+&lt;p&gt;The two examples above show one type of unexpected jumps; some extreme values generated the jumps. These outliers are easy to detect using the window screening method (one of the models in the voting methods that we proposed). The voting method is similar to a k fold cross-validation. However, the validation set is not randomly selected but a preset number of consecutive points in the data.&lt;/p&gt;
+&lt;pre&gt;&lt;code class=&#34;language-{r,&#34;&gt;knitr::include_graphics(&amp;quot;o9.png&amp;quot;)
+knitr::include_graphics(&amp;quot;o10.png&amp;quot;)
+&lt;/code&gt;&lt;/pre&gt;
+&lt;p&gt;These two examples of the unexpected jumps due to a large number of outliers is different from the previous ones. The outliers that cause the jump are not extreme values but the value that gradually deviates away from the general trend. The left one has two unexpected peaks around the x-axis at - 1500 and -500. The right one has two unexpected peaks around the x-axis at - 400 and - 200.&lt;/p&gt;
+&lt;h2 id=&#34;4-voting-methods-to-detect-and-impute-the-outliers&#34;&gt;4. Voting methods to detect and &lt;strong&gt;impute&lt;/strong&gt; the outliers&lt;/h2&gt;
+&lt;h3 id=&#34;41-non-parametric-splines-1st-model-in-the-voting-methods&#34;&gt;4.1 Non-parametric splines (1st model in the voting methods)&lt;/h3&gt;
+&lt;p&gt;These are the methods that we can use to remove the outliers in the first two scenarios.&lt;/p&gt;
+&lt;ol&gt;
+&lt;li&gt;
+&lt;p&gt;Fit a non-parametric spline with an arbitrary number of knots using the whole dataset $\mathcal{D}$&lt;/p&gt;
+&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;Obtain the fitted value $y^*$ and the standard deviation $sd$ at each time points&lt;/p&gt;
+&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;Index the outliers $\text{I}^{np}_k = ( |\hat y_k - y_k^*| &amp;gt; n \times sd_k)$, $n$ is a arbitrary number, where $\hat y$ belongs to the observed dataset $\mathcal{D}$ and $k = 1,2,3, \cdots n$, and $n$ is the number of the observation in the dataset $\mathcal{D}$&lt;/p&gt;
+&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;Calculate the reduced sum of the squares $MSE^{np} = \sum_{k=1}^n (\hat y - y^*)^2 \times I_k^{np}$&lt;/p&gt;
+&lt;/li&gt;
+&lt;/ol&gt;
+&lt;h3 id=&#34;42-window-process-2nd-model-in-the-voting-methods&#34;&gt;4.2 Window process (2nd model in the voting methods)&lt;/h3&gt;
+&lt;ol&gt;
+&lt;li&gt;
+&lt;p&gt;Create a vector $W$ that represents the length of windows that will be used in the window precess, $0 &amp;lt; |W| &amp;lt; n$(where n is the total observation in the data)&lt;/p&gt;
+&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;Set the window length to $W_i$ ( where $0 &amp;lt; i \le |W|$ ) and start a cross-validation like process&lt;/p&gt;
+&lt;p&gt;2.0. create a vector $I_i^{wp}$ with all 0 in the vector, such that $|I_i| = n$&lt;/p&gt;
+&lt;p&gt;2.1. removed the set of observation $\mathcal{A}$ from the whole dataset $\mathcal{D}$ and denote it as $\mathcal{D}&lt;em&gt;{ij}$, and denote the complementary set of $\mathcal{D}&lt;/em&gt;{ij}$ as $\mathcal{D}&lt;em&gt;{ij}^c$, where $\mathcal{A} = {\omega:\omega \in[x_j,x&lt;/em&gt;{j + W_i}] , x_k\in\mathcal{D}}$, and $k = 1,2,3, \cdots , n$&lt;/p&gt;
+&lt;p&gt;2.2. fit a non-parametric spline using $\mathcal{D}&lt;em&gt;{ij}$, denote it as $\mathcal{M}&lt;/em&gt;{ij}$&lt;/p&gt;
+&lt;p&gt;2.3. predit the data $\mathcal{D}&lt;em&gt;{ij}^c$ using $\mathcal{M}&lt;/em&gt;{ij}$, denote the predicted dataset as $\widetilde{\mathcal{D}_{ij}^c}$&lt;/p&gt;
+&lt;p&gt;2.4. let $\hat y_k$ and $\tilde y_k$ are eletments in  $\mathcal{D}&lt;em&gt;{ij}$ and $\widetilde{\mathcal{D}&lt;/em&gt;{ij}^c}$ respectively, let $sd_k$ represent the standard deviation for $\widetilde y_k$ and $I_{ij}^{wp}=I_{ij}^{wp}( |\hat y_k - \tilde y_k| &amp;gt; n \times sd_k )$, where $k = 1,2,3, \cdots,j$&lt;/p&gt;
+&lt;p&gt;2.5 repeat the step 2.1 to 2.4 until the end of the window approach the last observation&lt;/p&gt;
+&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;calculate the reduced sum of squares $MSE^{wp}&lt;em&gt;i = \sum&lt;/em&gt;{k=1}^j(\hat y_k - \tilde y_k)^2 I_{ik}$ where $k = 1,2,3, \cdots, j$&lt;/p&gt;
+&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;Go back to step one and repeat for all preset window length and obtain the $MSE_i^{wp}$ and $I_i^{wp}$ for each window length $W_i \subset W$&lt;/p&gt;
+&lt;/li&gt;
+&lt;/ol&gt;
+&lt;h3 id=&#34;43-voting-mse-of-from-the-two-models-above&#34;&gt;4.3 Voting MSE of from the two models above&lt;/h3&gt;
+&lt;p&gt;The voting method is a combined method of the two previous models. By using the voting method, we can get the best parameter by grid searching, which was arbitrary in the previous step.&lt;/p&gt;
+&lt;p&gt;For each length of the windows, we can compute a total reduced $MSE$ contructed by $MSE_1$, $MSE_2$, and $MSE_3$&lt;/p&gt;
+&lt;ol&gt;
+&lt;li&gt;
+&lt;p&gt;We denote $\text{MSE}&lt;em&gt;{i1} = \frac{1}{2} \times ( \frac{ \sum&lt;/em&gt;{k=1}^n (\hat y_k - y_k^*)^2 \times I_k^{np} \times I_{ik}^{wp} }{ \sum_{k=1}^n I_k^{np} \times I_{ik}^{wp}} + \frac{ \sum_{k=1}^n (\hat y_k - \tilde y_k)^2 \times I_k^{np} \times I_{ik}^{wp} }{ \sum_{k=1}^n I_k^{np} \times I_{ik}^{wp}})$&lt;/p&gt;
+&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;Denote $\text{MSE}&lt;em&gt;{i2} = \frac{ \sum&lt;/em&gt;{k=1}^n (\hat y_k - y_k^*)^2 \times I_k^{np} \times (1-I_{ik}^{wp}) }{ \sum_{k=1}^n I_k^{np} \times (1-I_{ik}^{wp})}$&lt;/p&gt;
+&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;Denote $\text{MSE}&lt;em&gt;{i3} = \frac{ \sum&lt;/em&gt;{k=1}^n (\hat y_k - \tilde y_k)^2 \times (1-I_k^{np}) \times I_{ik}^{wp} }{ \sum_{k=1}^n (1-I_k^{np}) \times I_{ik}^{wp}}$&lt;/p&gt;
+&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;Calculate $\text{MSE}&lt;em&gt;i = \text{MSE}&lt;/em&gt;{i1} - \text{MSE}&lt;em&gt;{i2} - \text{MSE}&lt;/em&gt;{i3}$&lt;/p&gt;
+&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;Repeat the step 1 to 4 for all window length, find the length that maxmized the $\text{MSE}$ as our preferred window length&lt;/p&gt;
+&lt;/li&gt;
+&lt;/ol&gt;
+&lt;p&gt;We can also repeat the previous step for different non-parametric splines, and the one that maximized the $\text{MSE}$ will be used to detect the outliers.&lt;/p&gt;
+&lt;h2 id=&#34;5-imputation&#34;&gt;5. Imputation&lt;/h2&gt;
+&lt;p&gt;We developed 7 different ways of imputation. Currently, we would prefer to impute the outliers with the fitted value of the newly fitted non-parametric splines using the data without outliers detected in the previous voting method.&lt;/p&gt;
+&lt;h2 id=&#34;6-result-of-the-voting-method&#34;&gt;6. Result of the voting method&lt;/h2&gt;
+&lt;pre&gt;&lt;code class=&#34;language-{r,&#34;&gt;knitr::include_graphics(&amp;quot;r1.png&amp;quot;)
+knitr::include_graphics(&amp;quot;r2.png&amp;quot;)
+&lt;/code&gt;&lt;/pre&gt;
+&lt;pre&gt;&lt;code class=&#34;language-{r,&#34;&gt;knitr::include_graphics(&amp;quot;r3.png&amp;quot;)
+knitr::include_graphics(&amp;quot;r4.png&amp;quot;)
+&lt;/code&gt;&lt;/pre&gt;
+&lt;pre&gt;&lt;code class=&#34;language-{r,&#34;&gt;knitr::include_graphics(&amp;quot;r5.png&amp;quot;)
+knitr::include_graphics(&amp;quot;r6.png&amp;quot;)
+&lt;/code&gt;&lt;/pre&gt;
+&lt;pre&gt;&lt;code class=&#34;language-{r,&#34;&gt;knitr::include_graphics(&amp;quot;r7.png&amp;quot;)
+knitr::include_graphics(&amp;quot;r8.png&amp;quot;)
+&lt;/code&gt;&lt;/pre&gt;
+&lt;p&gt;The first and second columns are the original data; the second and fourth columns are the one after applying the voting methods and imputing outliers using the imputation method mentioned above.&lt;/p&gt;
+&lt;p&gt;In general, the voting methods removed the outliers and kept the trend we need in the functional data regression and other analyses using cumulated and aggregated measures of the values.&lt;/p&gt;
+&lt;h2 id=&#34;7-improvement-in-prediction&#34;&gt;7. Improvement in prediction&lt;/h2&gt;
+&lt;h3 id=&#34;71-auc-in-original-and-smoothed-data-set-processed-by-the-voting-method&#34;&gt;7.1 AUC in original and smoothed data set (processed by the voting method)&lt;/h3&gt;
+&lt;p&gt;We applied a logistic regression using survival as the outcome and mean oxygen level, APACHE score, CPR duration, and CPR derivatives as the predictor on the full data set and the processed data set, respectively.&lt;/p&gt;
+&lt;p&gt;We evaluate the AUC using a 5 fold cross-validation. We repeat the 5 fold cross-validation 1000 times to obtain the empirical distribution of the estimated AUC.&lt;/p&gt;
+&lt;pre&gt;&lt;code class=&#34;language-{r,&#34;&gt;knitr::include_graphics(&amp;quot;e1.png&amp;quot;)
+knitr::include_graphics(&amp;quot;e2.png&amp;quot;)
+&lt;/code&gt;&lt;/pre&gt;
+&lt;p&gt;We were able to improve the mean of the AUC by 6 percent. However, outcome survival is a rare outcome, and AUC might not be able to give us a valid estimate.&lt;/p&gt;
+&lt;h3 id=&#34;72-auc-in-the-bootstrapped-original-and-smoothed-data-set-processed-by-the-voting-method&#34;&gt;7.2 AUC in the bootstrapped original and smoothed data set (processed by the voting method)&lt;/h3&gt;
+&lt;p&gt;Since the outcome survival is a rare event, we applied bootstrap on the dataset first to enlarge the size of the data to five times as the original data and then applied the same analysis to estimate the AUC&lt;/p&gt;
+&lt;pre&gt;&lt;code class=&#34;language-{r,&#34;&gt;knitr::include_graphics(&amp;quot;e3.png&amp;quot;)
+knitr::include_graphics(&amp;quot;e4.png&amp;quot;)
+&lt;/code&gt;&lt;/pre&gt;
+&lt;p&gt;The bootstrapped sample also shows an increase in the accuracy after removing the outliers. The AUC was increased by 6% after removing outliers using our voting method.&lt;/p&gt;
+&lt;p&gt;However, since it is a bootstrapped sample, the data used for fitting the model may appear in the validation dataset, the AUC is overestimated. We would like to purpose some other estimation of the prediction accuracy in the future to perform the analysis again.&lt;/p&gt;
+&lt;h2 id=&#34;8-future-works&#34;&gt;8. Future works&lt;/h2&gt;
+&lt;h3 id=&#34;81-simulation&#34;&gt;8.1 Simulation&lt;/h3&gt;
+&lt;p&gt;To be finished, we purpose to simulate the functional data and the outlier generating process. We will apply the voting method on the simulated dataset to see if the method works well.&lt;/p&gt;
+&lt;h3 id=&#34;82-r-function-and-packages&#34;&gt;8.2 R function and packages&lt;/h3&gt;
+&lt;p&gt;I would like to wrap up the method and R function, and test the method on more simulation data and generalize this method in terms of more types of outlier detections.&lt;/p&gt;
+&lt;p&gt;I would also like to see if there is any other way to improve the method on its computational efficiency.&lt;/p&gt;
+</description>
+    </item>
+    
+    <item>
+      <title>Paper Review Time-dependent ROCs and AUCs for censored endpoints, dynamic prediction via joint modeling and landmarking</title>
+      <link>https://NYU-Medicine-CSSA.github.io/post/jointmodeling/</link>
+      <pubDate>Fri, 20 Dec 2019 00:00:00 +0000</pubDate>
+      <guid>https://NYU-Medicine-CSSA.github.io/post/jointmodeling/</guid>
+      <description>&lt;h2 id=&#34;1-introduction&#34;&gt;1. Introduction&lt;/h2&gt;
+&lt;p&gt;In this project, we reviewed papers about time-dependent cox model, &lt;em&gt;Therneau, T., Crowson, C., &amp;amp; Atkinson, E. (2013). Using time-dependent covariates and time dependent coefficients in the Cox model. Red, 2, 1.&lt;/em&gt;, joint modeling with survival and longitudinal process, &lt;em&gt;Hsieh, Fushing, Yi-Kuan Tseng, and Jane-Ling Wang. 2006. &amp;ldquo;Joint Modeling of Survival and Longitudinal Data: Likelihood Approach Revisited.&amp;rdquo; Biometrics 62 (4). Blackwell Publishing Inc: 1037-43.doi:10.1111/j.1541-0420.2006.00570.x.&lt;/em&gt;, landmarking analysis, &lt;em&gt;Dafni, U. (2011). Landmark analysis at the 25-year landmark point. Circulation: Cardiovascular Quality and Outcomes, 4(3), 363-371.&lt;/em&gt;&lt;/p&gt;
+&lt;p&gt;Apart from the model&amp;rsquo;s section, we also reviewed several papers to evaluate the prediction accuracy for the models above. &lt;em&gt;Rizopoulos, D., Molenberghs, G., &amp;amp; Lesaffre, E. M. (2017). Dynamic predictions with time-dependent covariates in survival analysis using joint modeling and landmarking. Biometrical Journal, 59(6), 1261-1276.&lt;/em&gt; is the main one that we used to perform the simulation and real data analysis.&lt;/p&gt;
+&lt;h2 id=&#34;2-modelings-and-methods&#34;&gt;2. Modelings and Methods&lt;/h2&gt;
+&lt;p&gt;In this section, we will introduce the three models that we reviewed, we also focused on the differences between the three models and the advantages and disadvantages of the three models.&lt;/p&gt;
+&lt;h3 id=&#34;21-time-dependent-covariates-cox-models&#34;&gt;2.1 Time dependent covariates Cox models&lt;/h3&gt;
+&lt;p&gt;Before introducing the time-dependent covariates cox model, we want to refresh our memory on the proportional hazard model (cox model), which we define the hazard function as&lt;/p&gt;
+&lt;p&gt;$$\lambda(t|Z) = \lambda_0(t)\exp{\beta&amp;rsquo; Z} $$&lt;/p&gt;
+&lt;p&gt;where the baseline hazard $\lambda_0(t)$ depends on time $t$ but not depends on the covariates $Z$ and the hazard ratio $e^{\beta&amp;rsquo; Z}$ depends on covariates $Z$ but not depends on time $t$.&lt;/p&gt;
+&lt;p&gt;There are cases where if we measure some of the $Z_j$ over time, they may vary ( e.g. biomarkers)&lt;br&gt;
+Often time, a small fraction of the available biomarker information is used.
+One example that motivated the time depends covariates cox model is the Stanford Heart transplant example, where a standard cox model was initially fit without consideration on the time-dependent covariate waiting time to get transplants which can be an important both in inference and prediction, the patients get the transplant earlier might have a higher survival probability due to the better condition of the early-stage patients.&lt;/p&gt;
+&lt;p&gt;When we have such time-dependent covariates, we might want to modify the cox model so that it can take account for the time-dependent effect on the measured biomarkers. We can rewrite the hazard function where the exponential part was expressed by a linear combination of the covariates that depends on time:&lt;/p&gt;
+&lt;p&gt;$$\lambda(t) = \lambda_0(t)\exp{\beta&amp;rsquo; Z(t)}$$&lt;/p&gt;
+&lt;p&gt;it looks like a tiny modification, but it has a different meaning when looking at what do these two models measure.&lt;/p&gt;
+&lt;p&gt;for the cox model, we are comparing the survival distributions between those patients with different treatment. However, for the time-dependent covariates cox model, we are actually comparing the risk of an event between transplant and non-transplant at each event time, but we re-evaluated each person based on whether they had had a transplant by that time.&lt;/p&gt;
+&lt;p&gt;Inference proceeds similarly to the Cox model (time-independent), the only difference is that the values of Z now changes at each risk set.
+We can calculate the partial likelihood as follow:&lt;/p&gt;
+&lt;p&gt;$$\mathcal{L}(\beta) = \prod_{i=1}^n \frac{\exp{\beta Z_i(T_i)}}{\sum_{j \in \mathcal{R}(t_i)(\beta&amp;rsquo; Z_j(T_i) }}\delta_i$$&lt;/p&gt;
+&lt;p&gt;However, one important feature for the time dependents covariates model is that the external covariates are more appropriate for the model compared to the internal covariates. To be specific, we want the covariates depends on time but not depends on the failure to be included in the time-dependent covariates cox model instead of the covariates that we cannot observe or dependents on the failure of the patients.&lt;/p&gt;
+&lt;h3 id=&#34;22-joint-models-with-longitudinal-process-and-survival-process&#34;&gt;2.2 Joint Models with longitudinal process and survival process&lt;/h3&gt;
+&lt;p&gt;To account for the special features of internal covariates, joint models for longitudinal and time-to-event data have been developed.&lt;/p&gt;
+&lt;p&gt;In the joint modeling, we need two outcome variables, a longitudinal outcome, and a survival outcome, instead of only one survival outcome in the previous time-dependent covariates cox model.&lt;/p&gt;
+&lt;p&gt;The joint model was combined by the process of a longitudinal mixed effect submodel, a survival submodel and a joint model of the above two submodels.&lt;/p&gt;
+&lt;p&gt;For the longitudinal process, we have a mixed effect model:
+$$y_i(t) = m_i(t) + \epsilon_i(t) = \boldsymbol{x_i}^T\boldsymbol{\beta} + \boldsymbol{Z_i}(t)\boldsymbol{b_i} + \epsilon_i $$
+where $y_i(t)$ denotes the observed longitudianl outcome at time $t$. $\boldsymbol{x_i}$, $\boldsymbol{z_i}$ denote the fix effect and random effect at time $t$ respectively, and the $m_i(t)$ denotes the predicted longitudinal outcome using the fix effect and random effect at time $t$.&lt;/p&gt;
+&lt;p&gt;For the survival process, we have a cox model:
+$$h_i(t|\mathcal{M}_i(t)) = h_0(t)\exp{\gamma^T w_i + \alpha m_i(t) } $$&lt;/p&gt;
+&lt;p&gt;where $\mathcal{M}_i(t) = {m_i(s), 0 &amp;lt; s &amp;lt; t }:$ the history of the true (unobserved) longitudinal process up to time $t$, $\alpha$ quantifies the association between the true value of the marker at time $t$ and the hazard for an event and $w_i$ is a vector of baseline covariates.&lt;/p&gt;
+&lt;p&gt;We are able to rewrite the survival probability as follow:
+$$S_j{t |\mathcal{M}_i(t, b_j), \theta} = \exp{\int_0^t h_0(s)\exp{\gamma^T w_j + \alpha_j(s) } } $$&lt;/p&gt;
+&lt;p&gt;The joint likelihood function is:
+$$p(y_j, T_i, \delta_i) = \int p(y_i|b_i){h(T_i|b_i)^{\delta_i}S(T_i|b_i)}p(b_i)db_i $$
+The likelihood of the model is derived under the conditional independence assumptions that given the random effects, both longitudinal and event time process are assumed independent, and the longitudinal response of each subject are assumed independent.&lt;/p&gt;
+&lt;p&gt;Estimation of the joint models&amp;rsquo; parameters can be based either on maximum likelihood or a Bayesian approach using Markov chain Monte Carlo (MCMC) algorithms.&lt;/p&gt;
+&lt;p&gt;We can also use the joint model to do dynamic prediction, using the covariates recorded up to time $t$, we can predict the survival probability $\pi(u|t)$ at time $u$ where $u&amp;gt;t$
+$$\pi(u|t) = \Pr(T_j^* \ge u | T_j^* &amp;gt; t, y_j(t), D_n)$$
+Where $T_j^*$ is the true event time for subject $j$, and $D_n$ is the set ${T_i, \delta_i, y_i }$. Meanwhile, when we have new information at time $t&amp;rsquo; &amp;gt; t$, we can update to obtain $\pi_j(u|t&amp;rsquo;)$&lt;/p&gt;
+&lt;h3 id=&#34;23-landmarking&#34;&gt;2.3 Landmarking&lt;/h3&gt;
+&lt;p&gt;Landmarking can also provide the survival probability $\pi_j(u|t)$ for patient $j$ with resetting the time to zero being the landmarking time.&lt;/p&gt;
+&lt;p&gt;$$h_i(u) = \lim_{\Delta t \rightarrow 0}\frac{1}{\Delta t}\Pr(u \le T_i^*&amp;lt;u + \Delta t | T_i^* \ge u$$&lt;/p&gt;
+&lt;p&gt;$$\mathcal{Y}_i(t) =  h_0(u)\exp{\gamma^T w_i + \alpha \tilde{y}_i(t) }$$&lt;/p&gt;
+&lt;p&gt;where $w_i$ denotes the baseline covariates and $\tilde{y}_i(t)$ denotes the last available longitudinal response that also enters into the model as an ordinary baseline covariate. The survival probability $\pi_j(u|t)$ at time $t$ can be obtained by the mean of the Breslow estimator:
+$$\hat\pi^{LM}_j(u|t) = \exp{-\hat H_0(u)exp{\hat \gamma^T w_l + \hat \alpha \tilde y_j(t) } }$$&lt;/p&gt;
+&lt;p&gt;where&lt;/p&gt;
+&lt;p&gt;$$\hat H_0(u) = \sum_{i\in \mathcal{R}(t)} \frac{I(T_i \le u) \delta_i}{\sum_{l \in \mathcal{R}(u)} \exp{\hat \gamma^T w_l + \hat \alpha \tilde y_l(t) } }$$
+However, comparing to the joint modeling, this approach have several disadvantages:&lt;/p&gt;
+&lt;ol&gt;
+&lt;li&gt;
+&lt;p&gt;A potential responder will only belong to the &amp;lsquo;responder&amp;rsquo; group if they survives until time of response. (Immortal time bias)&lt;/p&gt;
+&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;Responder v.s. non-responder is something that is not known at baseline, which makes the grouping based on something that will happen in the future that leads to the unpromising facts that any subjects who were lost to follow-up or died prior to landmark time are excluded from further analysis.&lt;/p&gt;
+&lt;/li&gt;
+&lt;/ol&gt;
+&lt;img src=&#34;lm1.png&#34; alt=&#34;Smiley face&#34; width=&#34;300&#34; height=&#34;300&#34; style=&#34;clear:right&#34;&gt;
+&lt;img src=&#34;lm2.png&#34; alt=&#34;Smiley face&#34; width=&#34;300&#34; height=&#34;300&#34; style=&#34;clear:left&#34;&gt;
+&lt;p&gt;An important feature in landmarking is landmarking time. The result of survival analysis can be varied with different landmark times since the event happened before the landmark time is excluded from the analysis. We will obtain a smaller sample size and statistical power with later landmark time. However, we are prone to miss-classify the late responder to non-responder if we have an earlier landmark time. So, the choice of landmark time is arbitrary and crucial.&lt;/p&gt;
+&lt;h2 id=&#34;3-measuring-model-predictive-performance&#34;&gt;3. Measuring model predictive performance&lt;/h2&gt;
+&lt;p&gt;After we reviewed those modeling methods, an important factor in evaluating the models is the predictive performance of the models. Here, we first define two evaluation methods, Discrimination, and Calibration. Then, we evaluated the three models using the two methods on real data (not the original data but a data set simulated based on the original real data) and simulated data.&lt;/p&gt;
+&lt;h3 id=&#34;31-discrimination&#34;&gt;3.1 Discrimination&lt;/h3&gt;
+&lt;p&gt;Instead of calculating the discrimination of a time point, we focus on a time interval where we can take into account the dynamic nature of the longitudinally measured biomarker. The time interval also has medical relevance during which the physicians can take action to improve the survival probability of the patients who are about to go through events. They defined their prediction rules as follow:&lt;/p&gt;
+&lt;ol&gt;
+&lt;li&gt;
+&lt;p&gt;We term subject $j$ as a case if the survival probability of patient $j$ is smaller than a threshold $c$, $\pi_j(t + \Delta t | t) &amp;lt; c$&lt;/p&gt;
+&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;Conversely term subject $j$ as a control if the survival probability of patient $j$ is larger than a threshold $c$, $\pi_j(t + \Delta t | t) &amp;gt; c$ for any $c \in [0,1]$&lt;/p&gt;
+&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;For any randomly chosen pair of subjects ${i, j}$, the model can be assessed by the area under the curve using different $c$&lt;/p&gt;
+&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;If subject $j$ experiences the event within the time interval, they should be assigned a lower survival probability by the model&lt;/p&gt;
+&lt;/li&gt;
+&lt;/ol&gt;
+&lt;p&gt;We can estimate the AUC by appropriately counting the concordant pairs of subjects. Meanwhile, we decompose AUC into 4 parts first and then weighted each AUC by the probability of they will be comparable, meaning that we weight the AUC by the probability of the senior happening.&lt;/p&gt;
+&lt;img src=&#34;auctbl.png&#34; alt=&#34;Smiley face&#34; width=&#34;600&#34; height=&#34;600&#34; style=&#34;clear:right&#34;&gt;
+&lt;p&gt;and thus, we have the estimation of $AUC$ expressed as follow:
+$$\hat{AUC}&lt;em&gt;m = \frac{\sum&lt;/em&gt;{i = 1}^n \sum_{j = 1, j\ne i}^n I{\hat\pi_i(t + \Delta t|t) &amp;lt; \hat\pi_j(t + \Delta t|t) \times I{\Omega_{ij}^{(m)}(t) \times \hat \nu_{ij}^{(m)} }  } }{\sum_{i = 1}^n \sum_{j = 1, j\ne i}^n I{\Omega_{ij}^{(m)} (t) \times  \nu_{ij}^{(m)} } }$$&lt;/p&gt;
+&lt;p&gt;where $m = 2,3,4$ and $\hat \nu_{ij}^2 = 1 - \hat\pi_i(t + \Delta t | T_i)$, $\hat \nu_{ij}^3 = \hat\pi_i(t + \Delta t | T_i)$, $\hat \nu_{ij}^4 = 1 - \hat\pi_i(t + \Delta t | T_i)\times\hat\pi_i(t + \Delta t | T_i) $&lt;/p&gt;
+&lt;h3 id=&#34;32-calibration&#34;&gt;3.2 Calibration&lt;/h3&gt;
+&lt;p&gt;Similar to the discrinimation, we also want to take account into the longitudinal nature of the biomaker. And the goal is to predict the occurrence of events at $u &amp;gt; t$ given the information recorded up to time $t$.
+$$PE(u | t) = E[L {I(T^* &amp;gt; u) - \pi(u|t) } ] $$
+An estimate of $PE(u|t)$ considering censoring was proposed by Henderson et al.(2002):&lt;/p&gt;
+&lt;p&gt;$\hat PE(u|t)= { n(t)}^{-1} \sum_{i: T&amp;gt;t} I(T_i &amp;gt; u)L{ 1 - \hat\pi_i(u|t) } + \delta_i  I(T_i &amp;lt; u)L{ 0 - \hat\pi_i(u|t) } $&lt;/p&gt;
+&lt;p&gt;$$+ (1 - \delta_i)[  \hat\pi_i(u|T_i)L{ 1 - \hat\pi_i(u|t) } +  (1 - \hat\pi_i(u|T_i))L{ 0 - \hat\pi_i(u|t) }]$$&lt;/p&gt;
+&lt;p&gt;where ${ n(t)}^{-1}$ is the number of subjects at riskt at time $t$, $I(T_i &amp;gt; u)L{ 1 - \hat\pi_i(u|t) }$ denotes the patients who were alive after time $u$, $\delta_i  I(T_i &amp;lt; u)L{ 0 - \hat\pi_i(u|t) }$ denotes the patients who were died before time $u$, and $ (1 - \delta_i)[  \hat\pi_i(u|T_i)L{ 1 - \hat\pi_i(u|t) } +  (1 - \hat\pi_i(u|T_i))L{ 0 - \hat\pi_i(u|t) }]$ denotes the patients who are censored at time $u$.&lt;/p&gt;
+&lt;h2 id=&#34;4-aortic-valve-dataset-analysis&#34;&gt;4. Aortic valve dataset analysis}&lt;/h2&gt;
+&lt;p&gt;Some facts of the dataset:&lt;/p&gt;
+&lt;ol&gt;
+&lt;li&gt;285 patients who received a human tissue valve in the aortic position in hospital from 1987 to 2008&lt;/li&gt;
+&lt;li&gt;77(27%) of the patients received a subcoronary implantation(SI) and 208 of the patients received root replacement(RR)&lt;/li&gt;
+&lt;li&gt;73 of the patients required reoperation and 59 patients had died after operation&lt;/li&gt;
+&lt;li&gt;Echo examinations were scheduled at 6 months and 1 year postoperatively, and biennially thereafter.
+The aortic gradient was taken at each examination&lt;/li&gt;
+&lt;/ol&gt;
+&lt;img src=&#34;Picture1.png&#34; alt=&#34;Smiley face&#34; width=&#34;300&#34; height=&#34;300&#34; style=&#34;clear:right&#34;&gt;
+&lt;p&gt;we can find that there are minimal differences in the reoperation-free survival rates between RR and SI, and considerable variability in the shape of these trajectories, meanwhile no systematic differences apparent between the two groups. The following table is from rizopoulos2017dynamic paper, showing the prediction accuracy and AUC for three models.&lt;/p&gt;
+&lt;img src=&#34;Picture2.png&#34; alt=&#34;Smiley face&#34; width=&#34;300&#34; height=&#34;300&#34; style=&#34;clear:left&#34;&gt;
+&lt;img src=&#34;tbl1.png&#34; alt=&#34;Smiley face&#34; width=&#34;700&#34; height=&#34;700&#34; style=&#34;clear:left&#34;&gt;
+&lt;p&gt;Where the three models are,
+$$y_i(t) = \beta_1 SI_i + \beta_2 RR_i + \sum_{k=1}^3 \beta_{2k+1} { \beta_k(t, \lambda) \times RR_i } + b_{i0} + \sum_{k=1}^3b_{ik}\beta_k(t, \lambda) + \epsilon_i(t)    $$
+for the longitudinal process, and $M_1$, $M_2$, $M_3$ for the survival process:&lt;/p&gt;
+&lt;p&gt;$M_1: h_i(t) = h_0(t)\exp{ \gamma_1 RR_i + \gamma_2 Age_i + \gamma_3 Female_i + \alpha_1 m_i(t)}$&lt;/p&gt;
+&lt;p&gt;$M_2: h_i(t) = h_0(t)\exp{ \gamma_1RR_i + \gamma_2Age_i + \gamma_3Female_i + \alpha_1m_i(t)}$&lt;/p&gt;
+&lt;p&gt;$M_3: h_i(t) = h_0(t)\exp{ \gamma_1RR_i + \gamma_2Age_i + \gamma_3Female_i + \alpha_1\int_0^tm_i(s)ds}$&lt;/p&gt;
+&lt;h2 id=&#34;5-simulation-data-analysis&#34;&gt;5. Simulation Data Analysis&lt;/h2&gt;
+&lt;p&gt;Some facts of the data:&lt;/p&gt;
+&lt;ol&gt;
+&lt;li&gt;1000 patients have been followed up for 15 years&lt;/li&gt;
+&lt;li&gt;Provide Longitudinal measurements at baseline and afterward at 14 random follow up times&lt;/li&gt;
+&lt;li&gt;Simulated the longitudinal process using B-splines&lt;/li&gt;
+&lt;li&gt;Simulated the survival process using Weibull model&lt;/li&gt;
+&lt;li&gt;Simulate the censoring time dependents on treatment&lt;/li&gt;
+&lt;/ol&gt;
+&lt;p&gt;they used the same linear mixed effect with B-spline model to simulate the longitudinal process:
+$$y_i(t) = \beta_1Trt0_i + \beta_2Trt1_i + beta_3(t\times Trt0_i) + \beta_3(t \times Trt1_i) + \epsilon_i(t)$$
+and used survival model as follow to simuate the survival porcess:&lt;/p&gt;
+&lt;p&gt;$\textbf{Scenario I:} \hspace{2mm} h_i(t) = h_0(t)\exp {\gamma_1Trt1_i + \alpha_1m_i(t) }$a
+$\textbf{Scenario II:} \hspace{2mm} h_i(t) = h_0(t)\exp {\gamma_1Trt1_i + \alpha_1m_i(t) + \alpha_2m&amp;rsquo;_i(t)}$
+$\textbf{Scenario III:} \hspace{2mm} h_i(t) = h_0(t)\exp {\gamma_1Trt1_i + \alpha_1\int_0^tm_i(s)ds }$&lt;/p&gt;
+&lt;h2 id=&#34;6-results&#34;&gt;6. results&lt;/h2&gt;
+&lt;p&gt;Joint modeling approaches outperform the landmark approaches when there is no misspecification on the time effect on the longitudinal process.
+Landmark approaches outperformed the joint models in a few cases when there is strong misspecification of the time effect.
+Misspecification of the functional form that links the two processes did not seem to particularly influence the performance of the joint modeling and landmark approaches.\cite{rizopoulos2017dynamic}\cite{rizopoulos2014r}\cite{rizopoulos2014combining}&lt;/p&gt;
+</description>
+    </item>
+    
+    <item>
+      <title>Open Case Study Project Working Group</title>
+      <link>https://NYU-Medicine-CSSA.github.io/post/ocs/</link>
+      <pubDate>Sat, 20 Oct 2018 00:00:00 +0000</pubDate>
+      <guid>https://NYU-Medicine-CSSA.github.io/post/ocs/</guid>
+      <description>&lt;h2 id=&#34;overview&#34;&gt;Overview&lt;/h2&gt;
+&lt;p&gt;The Open Case Studies project is an educational resource that educators can use in the classroom to teach students how to effectively derive knowledge from data in real-world challenges.&lt;/p&gt;
+&lt;h2 id=&#34;link-to-our-website&#34;&gt;Link to our website&lt;/h2&gt;
+&lt;p&gt;&lt;a href=&#34;https://opencasestudies.github.io/&#34;&gt;https://opencasestudies.github.io/&lt;/a&gt;&lt;/p&gt;
+</description>
+    </item>
+    
+    <item>
+      <title>Data Mining and Statistical Learning Final Project</title>
+      <link>https://NYU-Medicine-CSSA.github.io/post/data-mining/</link>
+      <pubDate>Tue, 20 Mar 2018 00:00:00 +0000</pubDate>
+      <guid>https://NYU-Medicine-CSSA.github.io/post/data-mining/</guid>
+      <description>&lt;h2 id=&#34;1-question-1-jaccard-similarity&#34;&gt;1. Question 1 Jaccard similarity&lt;/h2&gt;
+&lt;p&gt;The definition of the Jaccard Similarity matrix is written as follow
+$$Jac(A,B)=\frac{|A\bigcap B|}{|A\bigcup B|}$$&lt;/p&gt;
+&lt;p&gt;However, the way of calculating Jaccard Matrix is little different. THe way of computing the matrix is showed as follow&lt;/p&gt;
+&lt;p&gt;$$Jac(A,B)=\frac{|A = B = 1|}{|A = 1 ~ or ~ B = 1|}$$&lt;/p&gt;
+&lt;p&gt;&lt;img src=&#34;variance.png&#34; alt=&#34;variance&#34;&gt;&lt;/p&gt;
+&lt;p&gt;The two figures show the variance explained and the cumulative variance explained by PCA. About 200 PCA can explain 80% of the variance.&lt;/p&gt;
+&lt;p&gt;However, as the plot below shows, the first two PCA can separate the two classes, Han Chinese in Beijing and Japanese in Tokyo pretty good.&lt;/p&gt;
+&lt;p&gt;&lt;img src=&#34;pca.png&#34; alt=&#34;pca&#34;&gt;&lt;/p&gt;
+&lt;h2 id=&#34;2-question-2--classification-model-for-cardiac-arrhythmia&#34;&gt;2. Question 2  Classification Model for Cardiac Arrhythmia&lt;/h2&gt;
+&lt;p&gt;Methods can be applied:&lt;/p&gt;
+&lt;ol&gt;
+&lt;li&gt;LDA&lt;/li&gt;
+&lt;li&gt;QDA&lt;/li&gt;
+&lt;li&gt;Best Subset&lt;/li&gt;
+&lt;li&gt;Forward Selection&lt;/li&gt;
+&lt;li&gt;Backward Selection&lt;/li&gt;
+&lt;li&gt;Stepwise Selection&lt;/li&gt;
+&lt;li&gt;Ridge Regression&lt;/li&gt;
+&lt;li&gt;Lasso regression&lt;/li&gt;
+&lt;li&gt;Elastic Net&lt;/li&gt;
+&lt;li&gt;Decision Tree&lt;/li&gt;
+&lt;li&gt;Bagging of the Trees&lt;/li&gt;
+&lt;li&gt;Random Forest&lt;/li&gt;
+&lt;li&gt;Gradient Boosting&lt;/li&gt;
+&lt;li&gt;ADA boosting&lt;/li&gt;
+&lt;li&gt;K-means&lt;/li&gt;
+&lt;li&gt;Hierarchical clustering&lt;/li&gt;
+&lt;/ol&gt;
+&lt;p&gt;Methods not applied:&lt;/p&gt;
+&lt;ol&gt;
+&lt;li&gt;
+&lt;p&gt;LDA is not used since it requires each covariate to be normally distributed.&lt;/p&gt;
+&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;Unsupervised learning is also not used since the label of the data is known.&lt;/p&gt;
+&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;Splines are not used also since most of the predictors are binary variables.&lt;/p&gt;
+&lt;/li&gt;
+&lt;/ol&gt;
+&lt;h3 id=&#34;21-general-linear-model-and-knn-with-variables-selected-by-correlation&#34;&gt;2.1 General Linear Model and KNN with variables selected by correlation&lt;/h3&gt;
+&lt;p&gt;&lt;img src=&#34;GLMKNN.png&#34; alt=&#34;GLMKNN&#34;&gt;&lt;/p&gt;
+&lt;p&gt;The x lab of the figure is the number of the variables included in the model (selected by correlation).&lt;/p&gt;
+&lt;p&gt;As the figure shows, the Logistic regression has lower cross-validation error.&lt;/p&gt;
+&lt;h3 id=&#34;22-general-linear-model-with-variables-selected-by-aic&#34;&gt;2.2 General Linear Model with variables selected by AIC&lt;/h3&gt;
+&lt;table&gt;
+&lt;thead&gt;
+&lt;tr&gt;
+&lt;th&gt;&lt;/th&gt;
+&lt;th&gt;Stepwise&lt;/th&gt;
+&lt;th&gt;Forward&lt;/th&gt;
+&lt;th&gt;Backward&lt;/th&gt;
+&lt;th&gt;subset&lt;/th&gt;
+&lt;/tr&gt;
+&lt;/thead&gt;
+&lt;tbody&gt;
+&lt;tr&gt;
+&lt;td&gt;error&lt;/td&gt;
+&lt;td&gt;0.20&lt;/td&gt;
+&lt;td&gt;0.33&lt;/td&gt;
+&lt;td&gt;0.28&lt;/td&gt;
+&lt;td&gt;0.25&lt;/td&gt;
+&lt;/tr&gt;
+&lt;/tbody&gt;
+&lt;/table&gt;
+&lt;h3 id=&#34;23-tree-based-methods&#34;&gt;2.3 Tree Based Methods&lt;/h3&gt;
+&lt;p&gt;&lt;img src=&#34;tree.png&#34; alt=&#34;tree&#34;&gt;&lt;/p&gt;
+&lt;p&gt;The data was imputed at first, the column with missing value more than 80% was then deleted.&lt;/p&gt;
+&lt;p&gt;As the figure shows, the Random Forest model has the lowest cv error.&lt;/p&gt;
+&lt;h3 id=&#34;24-shrinkage-methods&#34;&gt;2.4 Shrinkage Methods&lt;/h3&gt;
+&lt;p&gt;&lt;img src=&#34;LASSO.png&#34; alt=&#34;LASSO&#34;&gt;&lt;/p&gt;
+&lt;p&gt;The Elastic net returns to the minimum cv error.&lt;/p&gt;
+&lt;h2 id=&#34;3-model-comparison&#34;&gt;3. Model Comparison&lt;/h2&gt;
+&lt;center&gt;
+&lt;table&gt;
+&lt;thead&gt;
+&lt;tr&gt;
+&lt;th&gt;Methods(parameters)&lt;/th&gt;
+&lt;th&gt;cv-error&lt;/th&gt;
+&lt;/tr&gt;
+&lt;/thead&gt;
+&lt;tbody&gt;
+&lt;tr&gt;
+&lt;td&gt;Logistic(Number of covariates = 38)&lt;/td&gt;
+&lt;td&gt;0.14&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td&gt;KNN (Number of covariates = 21)&lt;/td&gt;
+&lt;td&gt;0.33&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td&gt;Simple Tree(ntree = 23)&lt;/td&gt;
+&lt;td&gt;0.17&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td&gt;Random Forest (ntree = 122, mtry = 49)&lt;/td&gt;
+&lt;td&gt;0.12&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td&gt;Vagging of the Tree (ntree = 232, mtry = 279)&lt;/td&gt;
+&lt;td&gt;0.14&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td&gt;Gradient Boosting(ntree = 123, depth = 1)&lt;/td&gt;
+&lt;td&gt;0.15&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td&gt;ADA Boosting(ntree = 242, depth = 1)&lt;/td&gt;
+&lt;td&gt;0.15&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td&gt;Stepwise Selection&lt;/td&gt;
+&lt;td&gt;0.20&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td&gt;Forward Selection&lt;/td&gt;
+&lt;td&gt;0.33&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td&gt;Backward Selection&lt;/td&gt;
+&lt;td&gt;0.28&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td&gt;Best Subset Selection&lt;/td&gt;
+&lt;td&gt;0.25&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td&gt;Elastic Net ($\alpha = 0.7$, $\lambda = 29$)&lt;/td&gt;
+&lt;td&gt;0.17&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td&gt;Lasso ($\lambda = 22$)&lt;/td&gt;
+&lt;td&gt;0.18&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td&gt;Ridge ($\lambda = 26$)&lt;/td&gt;
+&lt;td&gt;0.18&lt;/td&gt;
+&lt;/tr&gt;
+&lt;/tbody&gt;
+&lt;/table&gt;
+&lt;/center&gt;
+&lt;p&gt;The random Forest returns the best model with the lowest prediction error.&lt;/p&gt;
+&lt;p&gt;Compare to the paper. The prediction error is much smaller than the VFI5 method. However, the VFI5 method can categorize the result into 16 classes, it makes sense that VFI5 model has higher prediction error.&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;div style=&#34;color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4&#34;&gt;
+&lt;table style=&#34;border-spacing:0;padding:0;margin:0;border:0;width:auto;overflow:auto;display:block;&#34;&gt;&lt;tr&gt;&lt;td style=&#34;vertical-align:top;padding:0;margin:0;border:0;&#34;&gt;
+&lt;pre style=&#34;color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4&#34;&gt;&lt;code&gt;&lt;span style=&#34;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f&#34;&gt;  1
+&lt;/span&gt;&lt;span style=&#34;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f&#34;&gt;  2
+&lt;/span&gt;&lt;span style=&#34;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f&#34;&gt;  3
+&lt;/span&gt;&lt;span style=&#34;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f&#34;&gt;  4
+&lt;/span&gt;&lt;span style=&#34;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f&#34;&gt;  5
+&lt;/span&gt;&lt;span style=&#34;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f&#34;&gt;  6
+&lt;/span&gt;&lt;span style=&#34;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f&#34;&gt;  7
+&lt;/span&gt;&lt;span style=&#34;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f&#34;&gt;  8
+&lt;/span&gt;&lt;span style=&#34;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f&#34;&gt;  9
+&lt;/span&gt;&lt;span style=&#34;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f&#34;&gt; 10
+&lt;/span&gt;&lt;span style=&#34;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f&#34;&gt; 11
+&lt;/span&gt;&lt;span style=&#34;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f&#34;&gt; 12
+&lt;/span&gt;&lt;span style=&#34;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f&#34;&gt; 13
+&lt;/span&gt;&lt;span style=&#34;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f&#34;&gt; 14
+&lt;/span&gt;&lt;span style=&#34;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f&#34;&gt; 15
+&lt;/span&gt;&lt;span style=&#34;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f&#34;&gt; 16
+&lt;/span&gt;&lt;span style=&#34;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f&#34;&gt; 17
+&lt;/span&gt;&lt;span style=&#34;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f&#34;&gt; 18
+&lt;/span&gt;&lt;span style=&#34;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f&#34;&gt; 19
+&lt;/span&gt;&lt;span style=&#34;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f&#34;&gt; 20
+&lt;/span&gt;&lt;span style=&#34;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f&#34;&gt; 21
+&lt;/span&gt;&lt;span style=&#34;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f&#34;&gt; 22
+&lt;/span&gt;&lt;span style=&#34;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f&#34;&gt; 23
+&lt;/span&gt;&lt;span style=&#34;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f&#34;&gt; 24
+&lt;/span&gt;&lt;span style=&#34;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f&#34;&gt; 25
+&lt;/span&gt;&lt;span style=&#34;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f&#34;&gt; 26
+&lt;/span&gt;&lt;span style=&#34;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f&#34;&gt; 27
+&lt;/span&gt;&lt;span style=&#34;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f&#34;&gt; 28
+&lt;/span&gt;&lt;span style=&#34;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f&#34;&gt; 29
+&lt;/span&gt;&lt;span style=&#34;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f&#34;&gt; 30
+&lt;/span&gt;&lt;span style=&#34;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f&#34;&gt; 31
+&lt;/span&gt;&lt;span style=&#34;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f&#34;&gt; 32
+&lt;/span&gt;&lt;span style=&#34;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f&#34;&gt; 33
+&lt;/span&gt;&lt;span style=&#34;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f&#34;&gt; 34
+&lt;/span&gt;&lt;span style=&#34;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f&#34;&gt; 35
+&lt;/span&gt;&lt;span style=&#34;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f&#34;&gt; 36
+&lt;/span&gt;&lt;span style=&#34;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f&#34;&gt; 37
+&lt;/span&gt;&lt;span style=&#34;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f&#34;&gt; 38
+&lt;/span&gt;&lt;span style=&#34;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f&#34;&gt; 39
+&lt;/span&gt;&lt;span style=&#34;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f&#34;&gt; 40
+&lt;/span&gt;&lt;span style=&#34;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f&#34;&gt; 41
+&lt;/span&gt;&lt;span style=&#34;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f&#34;&gt; 42
+&lt;/span&gt;&lt;span style=&#34;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f&#34;&gt; 43
+&lt;/span&gt;&lt;span style=&#34;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f&#34;&gt; 44
+&lt;/span&gt;&lt;span style=&#34;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f&#34;&gt; 45
+&lt;/span&gt;&lt;span style=&#34;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f&#34;&gt; 46
+&lt;/span&gt;&lt;span style=&#34;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f&#34;&gt; 47
+&lt;/span&gt;&lt;span style=&#34;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f&#34;&gt; 48
+&lt;/span&gt;&lt;span style=&#34;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f&#34;&gt; 49
+&lt;/span&gt;&lt;span style=&#34;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f&#34;&gt; 50
+&lt;/span&gt;&lt;span style=&#34;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f&#34;&gt; 51
+&lt;/span&gt;&lt;span style=&#34;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f&#34;&gt; 52
+&lt;/span&gt;&lt;span style=&#34;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f&#34;&gt; 53
+&lt;/span&gt;&lt;span style=&#34;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f&#34;&gt; 54
+&lt;/span&gt;&lt;span style=&#34;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f&#34;&gt; 55
+&lt;/span&gt;&lt;span style=&#34;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f&#34;&gt; 56
+&lt;/span&gt;&lt;span style=&#34;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f&#34;&gt; 57
+&lt;/span&gt;&lt;span style=&#34;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f&#34;&gt; 58
+&lt;/span&gt;&lt;span style=&#34;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f&#34;&gt; 59
+&lt;/span&gt;&lt;span style=&#34;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f&#34;&gt; 60
+&lt;/span&gt;&lt;span style=&#34;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f&#34;&gt; 61
+&lt;/span&gt;&lt;span style=&#34;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f&#34;&gt; 62
+&lt;/span&gt;&lt;span style=&#34;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f&#34;&gt; 63
+&lt;/span&gt;&lt;span style=&#34;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f&#34;&gt; 64
+&lt;/span&gt;&lt;span style=&#34;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f&#34;&gt; 65
+&lt;/span&gt;&lt;span style=&#34;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f&#34;&gt; 66
+&lt;/span&gt;&lt;span style=&#34;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f&#34;&gt; 67
+&lt;/span&gt;&lt;span style=&#34;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f&#34;&gt; 68
+&lt;/span&gt;&lt;span style=&#34;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f&#34;&gt; 69
+&lt;/span&gt;&lt;span style=&#34;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f&#34;&gt; 70
+&lt;/span&gt;&lt;span style=&#34;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f&#34;&gt; 71
+&lt;/span&gt;&lt;span style=&#34;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f&#34;&gt; 72
+&lt;/span&gt;&lt;span style=&#34;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f&#34;&gt; 73
+&lt;/span&gt;&lt;span style=&#34;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f&#34;&gt; 74
+&lt;/span&gt;&lt;span style=&#34;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f&#34;&gt; 75
+&lt;/span&gt;&lt;span style=&#34;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f&#34;&gt; 76
+&lt;/span&gt;&lt;span style=&#34;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f&#34;&gt; 77
+&lt;/span&gt;&lt;span style=&#34;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f&#34;&gt; 78
+&lt;/span&gt;&lt;span style=&#34;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f&#34;&gt; 79
+&lt;/span&gt;&lt;span style=&#34;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f&#34;&gt; 80
+&lt;/span&gt;&lt;span style=&#34;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f&#34;&gt; 81
+&lt;/span&gt;&lt;span style=&#34;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f&#34;&gt; 82
+&lt;/span&gt;&lt;span style=&#34;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f&#34;&gt; 83
+&lt;/span&gt;&lt;span style=&#34;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f&#34;&gt; 84
+&lt;/span&gt;&lt;span style=&#34;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f&#34;&gt; 85
+&lt;/span&gt;&lt;span style=&#34;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f&#34;&gt; 86
+&lt;/span&gt;&lt;span style=&#34;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f&#34;&gt; 87
+&lt;/span&gt;&lt;span style=&#34;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f&#34;&gt; 88
+&lt;/span&gt;&lt;span style=&#34;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f&#34;&gt; 89
+&lt;/span&gt;&lt;span style=&#34;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f&#34;&gt; 90
+&lt;/span&gt;&lt;span style=&#34;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f&#34;&gt; 91
+&lt;/span&gt;&lt;span style=&#34;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f&#34;&gt; 92
+&lt;/span&gt;&lt;span style=&#34;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f&#34;&gt; 93
+&lt;/span&gt;&lt;span style=&#34;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f&#34;&gt; 94
+&lt;/span&gt;&lt;span style=&#34;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f&#34;&gt; 95
+&lt;/span&gt;&lt;span style=&#34;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f&#34;&gt; 96
+&lt;/span&gt;&lt;span style=&#34;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f&#34;&gt; 97
+&lt;/span&gt;&lt;span style=&#34;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f&#34;&gt; 98
+&lt;/span&gt;&lt;span style=&#34;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f&#34;&gt; 99
+&lt;/span&gt;&lt;span style=&#34;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f&#34;&gt;100
+&lt;/span&gt;&lt;span style=&#34;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f&#34;&gt;101
+&lt;/span&gt;&lt;span style=&#34;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f&#34;&gt;102
+&lt;/span&gt;&lt;span style=&#34;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f&#34;&gt;103
+&lt;/span&gt;&lt;span style=&#34;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f&#34;&gt;104
+&lt;/span&gt;&lt;span style=&#34;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f&#34;&gt;105
+&lt;/span&gt;&lt;span style=&#34;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f&#34;&gt;106
+&lt;/span&gt;&lt;span style=&#34;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f&#34;&gt;107
+&lt;/span&gt;&lt;span style=&#34;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f&#34;&gt;108
+&lt;/span&gt;&lt;span style=&#34;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f&#34;&gt;109
+&lt;/span&gt;&lt;span style=&#34;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f&#34;&gt;110
+&lt;/span&gt;&lt;span style=&#34;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f&#34;&gt;111
+&lt;/span&gt;&lt;span style=&#34;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f&#34;&gt;112
+&lt;/span&gt;&lt;span style=&#34;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f&#34;&gt;113
+&lt;/span&gt;&lt;span style=&#34;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f&#34;&gt;114
+&lt;/span&gt;&lt;span style=&#34;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f&#34;&gt;115
+&lt;/span&gt;&lt;span style=&#34;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f&#34;&gt;116
+&lt;/span&gt;&lt;span style=&#34;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f&#34;&gt;117
+&lt;/span&gt;&lt;span style=&#34;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f&#34;&gt;118
+&lt;/span&gt;&lt;span style=&#34;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f&#34;&gt;119
+&lt;/span&gt;&lt;span style=&#34;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f&#34;&gt;120
+&lt;/span&gt;&lt;span style=&#34;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f&#34;&gt;121
+&lt;/span&gt;&lt;span style=&#34;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f&#34;&gt;122
+&lt;/span&gt;&lt;span style=&#34;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f&#34;&gt;123
+&lt;/span&gt;&lt;span style=&#34;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f&#34;&gt;124
+&lt;/span&gt;&lt;span style=&#34;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f&#34;&gt;125
+&lt;/span&gt;&lt;span style=&#34;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f&#34;&gt;126
+&lt;/span&gt;&lt;span style=&#34;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f&#34;&gt;127
+&lt;/span&gt;&lt;span style=&#34;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f&#34;&gt;128
+&lt;/span&gt;&lt;span style=&#34;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f&#34;&gt;129
+&lt;/span&gt;&lt;span style=&#34;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f&#34;&gt;130
+&lt;/span&gt;&lt;span style=&#34;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f&#34;&gt;131
+&lt;/span&gt;&lt;span style=&#34;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f&#34;&gt;132
+&lt;/span&gt;&lt;span style=&#34;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f&#34;&gt;133
+&lt;/span&gt;&lt;span style=&#34;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f&#34;&gt;134
+&lt;/span&gt;&lt;span style=&#34;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f&#34;&gt;135
+&lt;/span&gt;&lt;span style=&#34;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f&#34;&gt;136
+&lt;/span&gt;&lt;span style=&#34;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f&#34;&gt;137
+&lt;/span&gt;&lt;span style=&#34;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f&#34;&gt;138
+&lt;/span&gt;&lt;span style=&#34;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f&#34;&gt;139
+&lt;/span&gt;&lt;span style=&#34;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f&#34;&gt;140
+&lt;/span&gt;&lt;span style=&#34;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f&#34;&gt;141
+&lt;/span&gt;&lt;span style=&#34;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f&#34;&gt;142
+&lt;/span&gt;&lt;span style=&#34;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f&#34;&gt;143
+&lt;/span&gt;&lt;span style=&#34;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f&#34;&gt;144
+&lt;/span&gt;&lt;span style=&#34;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f&#34;&gt;145
+&lt;/span&gt;&lt;span style=&#34;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f&#34;&gt;146
+&lt;/span&gt;&lt;span style=&#34;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f&#34;&gt;147
+&lt;/span&gt;&lt;span style=&#34;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f&#34;&gt;148
+&lt;/span&gt;&lt;span style=&#34;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f&#34;&gt;149
+&lt;/span&gt;&lt;span style=&#34;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f&#34;&gt;150
+&lt;/span&gt;&lt;span style=&#34;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f&#34;&gt;151
+&lt;/span&gt;&lt;span style=&#34;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f&#34;&gt;152
+&lt;/span&gt;&lt;span style=&#34;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f&#34;&gt;153
+&lt;/span&gt;&lt;span style=&#34;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f&#34;&gt;154
+&lt;/span&gt;&lt;span style=&#34;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f&#34;&gt;155
+&lt;/span&gt;&lt;span style=&#34;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f&#34;&gt;156
+&lt;/span&gt;&lt;span style=&#34;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f&#34;&gt;157
+&lt;/span&gt;&lt;span style=&#34;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f&#34;&gt;158
+&lt;/span&gt;&lt;span style=&#34;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f&#34;&gt;159
+&lt;/span&gt;&lt;span style=&#34;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f&#34;&gt;160
+&lt;/span&gt;&lt;span style=&#34;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f&#34;&gt;161
+&lt;/span&gt;&lt;span style=&#34;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f&#34;&gt;162
+&lt;/span&gt;&lt;span style=&#34;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f&#34;&gt;163
+&lt;/span&gt;&lt;span style=&#34;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f&#34;&gt;164
+&lt;/span&gt;&lt;span style=&#34;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f&#34;&gt;165
+&lt;/span&gt;&lt;span style=&#34;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f&#34;&gt;166
+&lt;/span&gt;&lt;span style=&#34;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f&#34;&gt;167
+&lt;/span&gt;&lt;span style=&#34;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f&#34;&gt;168
+&lt;/span&gt;&lt;span style=&#34;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f&#34;&gt;169
+&lt;/span&gt;&lt;span style=&#34;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f&#34;&gt;170
+&lt;/span&gt;&lt;span style=&#34;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f&#34;&gt;171
+&lt;/span&gt;&lt;span style=&#34;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f&#34;&gt;172
+&lt;/span&gt;&lt;span style=&#34;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f&#34;&gt;173
+&lt;/span&gt;&lt;span style=&#34;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f&#34;&gt;174
+&lt;/span&gt;&lt;span style=&#34;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f&#34;&gt;175
+&lt;/span&gt;&lt;span style=&#34;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f&#34;&gt;176
+&lt;/span&gt;&lt;span style=&#34;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f&#34;&gt;177
+&lt;/span&gt;&lt;span style=&#34;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f&#34;&gt;178
+&lt;/span&gt;&lt;span style=&#34;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f&#34;&gt;179
+&lt;/span&gt;&lt;span style=&#34;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f&#34;&gt;180
+&lt;/span&gt;&lt;span style=&#34;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f&#34;&gt;181
+&lt;/span&gt;&lt;span style=&#34;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f&#34;&gt;182
+&lt;/span&gt;&lt;span style=&#34;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f&#34;&gt;183
+&lt;/span&gt;&lt;span style=&#34;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f&#34;&gt;184
+&lt;/span&gt;&lt;span style=&#34;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f&#34;&gt;185
+&lt;/span&gt;&lt;span style=&#34;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f&#34;&gt;186
+&lt;/span&gt;&lt;span style=&#34;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f&#34;&gt;187
+&lt;/span&gt;&lt;span style=&#34;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f&#34;&gt;188
+&lt;/span&gt;&lt;span style=&#34;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f&#34;&gt;189
+&lt;/span&gt;&lt;span style=&#34;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f&#34;&gt;190
+&lt;/span&gt;&lt;span style=&#34;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f&#34;&gt;191
+&lt;/span&gt;&lt;span style=&#34;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f&#34;&gt;192
+&lt;/span&gt;&lt;span style=&#34;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f&#34;&gt;193
+&lt;/span&gt;&lt;span style=&#34;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f&#34;&gt;194
+&lt;/span&gt;&lt;span style=&#34;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f&#34;&gt;195
+&lt;/span&gt;&lt;span style=&#34;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f&#34;&gt;196
+&lt;/span&gt;&lt;span style=&#34;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f&#34;&gt;197
+&lt;/span&gt;&lt;span style=&#34;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f&#34;&gt;198
+&lt;/span&gt;&lt;span style=&#34;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f&#34;&gt;199
+&lt;/span&gt;&lt;span style=&#34;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f&#34;&gt;200
+&lt;/span&gt;&lt;span style=&#34;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f&#34;&gt;201
+&lt;/span&gt;&lt;span style=&#34;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f&#34;&gt;202
+&lt;/span&gt;&lt;span style=&#34;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f&#34;&gt;203
+&lt;/span&gt;&lt;span style=&#34;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f&#34;&gt;204
+&lt;/span&gt;&lt;span style=&#34;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f&#34;&gt;205
+&lt;/span&gt;&lt;span style=&#34;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f&#34;&gt;206
+&lt;/span&gt;&lt;span style=&#34;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f&#34;&gt;207
+&lt;/span&gt;&lt;span style=&#34;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f&#34;&gt;208
+&lt;/span&gt;&lt;span style=&#34;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f&#34;&gt;209
+&lt;/span&gt;&lt;span style=&#34;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f&#34;&gt;210
+&lt;/span&gt;&lt;span style=&#34;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f&#34;&gt;211
+&lt;/span&gt;&lt;span style=&#34;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f&#34;&gt;212
+&lt;/span&gt;&lt;span style=&#34;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f&#34;&gt;213
+&lt;/span&gt;&lt;span style=&#34;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f&#34;&gt;214
+&lt;/span&gt;&lt;span style=&#34;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f&#34;&gt;215
+&lt;/span&gt;&lt;span style=&#34;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f&#34;&gt;216
+&lt;/span&gt;&lt;span style=&#34;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f&#34;&gt;217
+&lt;/span&gt;&lt;span style=&#34;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f&#34;&gt;218
+&lt;/span&gt;&lt;span style=&#34;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f&#34;&gt;219
+&lt;/span&gt;&lt;span style=&#34;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f&#34;&gt;220
+&lt;/span&gt;&lt;span style=&#34;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f&#34;&gt;221
+&lt;/span&gt;&lt;span style=&#34;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f&#34;&gt;222
+&lt;/span&gt;&lt;span style=&#34;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f&#34;&gt;223
+&lt;/span&gt;&lt;span style=&#34;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f&#34;&gt;224
+&lt;/span&gt;&lt;span style=&#34;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f&#34;&gt;225
+&lt;/span&gt;&lt;span style=&#34;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f&#34;&gt;226
+&lt;/span&gt;&lt;span style=&#34;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f&#34;&gt;227
+&lt;/span&gt;&lt;span style=&#34;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f&#34;&gt;228
+&lt;/span&gt;&lt;span style=&#34;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f&#34;&gt;229
+&lt;/span&gt;&lt;span style=&#34;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f&#34;&gt;230
+&lt;/span&gt;&lt;span style=&#34;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f&#34;&gt;231
+&lt;/span&gt;&lt;span style=&#34;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f&#34;&gt;232
+&lt;/span&gt;&lt;span style=&#34;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f&#34;&gt;233
+&lt;/span&gt;&lt;span style=&#34;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f&#34;&gt;234
+&lt;/span&gt;&lt;span style=&#34;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f&#34;&gt;235
+&lt;/span&gt;&lt;span style=&#34;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f&#34;&gt;236
+&lt;/span&gt;&lt;span style=&#34;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f&#34;&gt;237
+&lt;/span&gt;&lt;span style=&#34;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f&#34;&gt;238
+&lt;/span&gt;&lt;span style=&#34;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f&#34;&gt;239
+&lt;/span&gt;&lt;span style=&#34;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f&#34;&gt;240
+&lt;/span&gt;&lt;span style=&#34;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f&#34;&gt;241
+&lt;/span&gt;&lt;span style=&#34;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f&#34;&gt;242
+&lt;/span&gt;&lt;span style=&#34;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f&#34;&gt;243
+&lt;/span&gt;&lt;span style=&#34;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f&#34;&gt;244
+&lt;/span&gt;&lt;span style=&#34;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f&#34;&gt;245
+&lt;/span&gt;&lt;span style=&#34;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f&#34;&gt;246
+&lt;/span&gt;&lt;span style=&#34;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f&#34;&gt;247
+&lt;/span&gt;&lt;span style=&#34;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f&#34;&gt;248
+&lt;/span&gt;&lt;span style=&#34;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f&#34;&gt;249
+&lt;/span&gt;&lt;span style=&#34;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f&#34;&gt;250
+&lt;/span&gt;&lt;span style=&#34;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f&#34;&gt;251
+&lt;/span&gt;&lt;span style=&#34;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f&#34;&gt;252
+&lt;/span&gt;&lt;span style=&#34;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f&#34;&gt;253
+&lt;/span&gt;&lt;span style=&#34;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f&#34;&gt;254
+&lt;/span&gt;&lt;span style=&#34;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f&#34;&gt;255
+&lt;/span&gt;&lt;span style=&#34;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f&#34;&gt;256
+&lt;/span&gt;&lt;span style=&#34;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f&#34;&gt;257
+&lt;/span&gt;&lt;span style=&#34;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f&#34;&gt;258
+&lt;/span&gt;&lt;span style=&#34;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f&#34;&gt;259
+&lt;/span&gt;&lt;span style=&#34;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f&#34;&gt;260
+&lt;/span&gt;&lt;span style=&#34;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f&#34;&gt;261
+&lt;/span&gt;&lt;span style=&#34;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f&#34;&gt;262
+&lt;/span&gt;&lt;span style=&#34;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f&#34;&gt;263
+&lt;/span&gt;&lt;span style=&#34;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f&#34;&gt;264
+&lt;/span&gt;&lt;span style=&#34;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f&#34;&gt;265
+&lt;/span&gt;&lt;span style=&#34;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f&#34;&gt;266
+&lt;/span&gt;&lt;span style=&#34;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f&#34;&gt;267
+&lt;/span&gt;&lt;span style=&#34;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f&#34;&gt;268
+&lt;/span&gt;&lt;span style=&#34;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f&#34;&gt;269
+&lt;/span&gt;&lt;span style=&#34;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f&#34;&gt;270
+&lt;/span&gt;&lt;span style=&#34;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f&#34;&gt;271
+&lt;/span&gt;&lt;span style=&#34;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f&#34;&gt;272
+&lt;/span&gt;&lt;span style=&#34;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f&#34;&gt;273
+&lt;/span&gt;&lt;span style=&#34;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f&#34;&gt;274
+&lt;/span&gt;&lt;span style=&#34;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f&#34;&gt;275
+&lt;/span&gt;&lt;span style=&#34;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f&#34;&gt;276
+&lt;/span&gt;&lt;span style=&#34;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f&#34;&gt;277
+&lt;/span&gt;&lt;span style=&#34;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f&#34;&gt;278
+&lt;/span&gt;&lt;span style=&#34;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f&#34;&gt;279
+&lt;/span&gt;&lt;span style=&#34;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f&#34;&gt;280
+&lt;/span&gt;&lt;span style=&#34;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f&#34;&gt;281
+&lt;/span&gt;&lt;span style=&#34;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f&#34;&gt;282
+&lt;/span&gt;&lt;span style=&#34;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f&#34;&gt;283
+&lt;/span&gt;&lt;span style=&#34;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f&#34;&gt;284
+&lt;/span&gt;&lt;span style=&#34;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f&#34;&gt;285
+&lt;/span&gt;&lt;span style=&#34;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f&#34;&gt;286
+&lt;/span&gt;&lt;span style=&#34;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f&#34;&gt;287
+&lt;/span&gt;&lt;span style=&#34;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f&#34;&gt;288
+&lt;/span&gt;&lt;span style=&#34;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f&#34;&gt;289
+&lt;/span&gt;&lt;span style=&#34;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f&#34;&gt;290
+&lt;/span&gt;&lt;span style=&#34;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f&#34;&gt;291
+&lt;/span&gt;&lt;span style=&#34;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f&#34;&gt;292
+&lt;/span&gt;&lt;span style=&#34;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f&#34;&gt;293
+&lt;/span&gt;&lt;span style=&#34;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f&#34;&gt;294
+&lt;/span&gt;&lt;span style=&#34;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f&#34;&gt;295
+&lt;/span&gt;&lt;span style=&#34;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f&#34;&gt;296
+&lt;/span&gt;&lt;span style=&#34;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f&#34;&gt;297
+&lt;/span&gt;&lt;span style=&#34;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f&#34;&gt;298
+&lt;/span&gt;&lt;span style=&#34;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f&#34;&gt;299
+&lt;/span&gt;&lt;span style=&#34;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f&#34;&gt;300
+&lt;/span&gt;&lt;span style=&#34;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f&#34;&gt;301
+&lt;/span&gt;&lt;span style=&#34;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f&#34;&gt;302
+&lt;/span&gt;&lt;span style=&#34;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f&#34;&gt;303
+&lt;/span&gt;&lt;span style=&#34;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f&#34;&gt;304
+&lt;/span&gt;&lt;span style=&#34;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f&#34;&gt;305
+&lt;/span&gt;&lt;span style=&#34;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f&#34;&gt;306
+&lt;/span&gt;&lt;span style=&#34;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f&#34;&gt;307
+&lt;/span&gt;&lt;span style=&#34;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f&#34;&gt;308
+&lt;/span&gt;&lt;span style=&#34;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f&#34;&gt;309
+&lt;/span&gt;&lt;span style=&#34;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f&#34;&gt;310
+&lt;/span&gt;&lt;span style=&#34;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f&#34;&gt;311
+&lt;/span&gt;&lt;span style=&#34;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f&#34;&gt;312
+&lt;/span&gt;&lt;span style=&#34;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f&#34;&gt;313
+&lt;/span&gt;&lt;span style=&#34;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f&#34;&gt;314
+&lt;/span&gt;&lt;span style=&#34;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f&#34;&gt;315
+&lt;/span&gt;&lt;span style=&#34;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f&#34;&gt;316
+&lt;/span&gt;&lt;span style=&#34;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f&#34;&gt;317
+&lt;/span&gt;&lt;span style=&#34;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f&#34;&gt;318
+&lt;/span&gt;&lt;span style=&#34;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f&#34;&gt;319
+&lt;/span&gt;&lt;span style=&#34;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f&#34;&gt;320
+&lt;/span&gt;&lt;span style=&#34;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f&#34;&gt;321
+&lt;/span&gt;&lt;span style=&#34;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f&#34;&gt;322
+&lt;/span&gt;&lt;span style=&#34;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f&#34;&gt;323
+&lt;/span&gt;&lt;span style=&#34;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f&#34;&gt;324
+&lt;/span&gt;&lt;span style=&#34;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f&#34;&gt;325
+&lt;/span&gt;&lt;span style=&#34;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f&#34;&gt;326
+&lt;/span&gt;&lt;span style=&#34;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f&#34;&gt;327
+&lt;/span&gt;&lt;span style=&#34;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f&#34;&gt;328
+&lt;/span&gt;&lt;span style=&#34;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f&#34;&gt;329
+&lt;/span&gt;&lt;span style=&#34;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f&#34;&gt;330
+&lt;/span&gt;&lt;span style=&#34;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f&#34;&gt;331
+&lt;/span&gt;&lt;span style=&#34;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f&#34;&gt;332
+&lt;/span&gt;&lt;span style=&#34;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f&#34;&gt;333
+&lt;/span&gt;&lt;span style=&#34;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f&#34;&gt;334
+&lt;/span&gt;&lt;span style=&#34;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f&#34;&gt;335
+&lt;/span&gt;&lt;span style=&#34;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f&#34;&gt;336
+&lt;/span&gt;&lt;span style=&#34;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f&#34;&gt;337
+&lt;/span&gt;&lt;span style=&#34;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f&#34;&gt;338
+&lt;/span&gt;&lt;span style=&#34;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f&#34;&gt;339
+&lt;/span&gt;&lt;span style=&#34;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f&#34;&gt;340
+&lt;/span&gt;&lt;span style=&#34;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f&#34;&gt;341
+&lt;/span&gt;&lt;span style=&#34;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f&#34;&gt;342
+&lt;/span&gt;&lt;span style=&#34;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f&#34;&gt;343
+&lt;/span&gt;&lt;span style=&#34;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f&#34;&gt;344
+&lt;/span&gt;&lt;span style=&#34;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f&#34;&gt;345
+&lt;/span&gt;&lt;span style=&#34;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f&#34;&gt;346
+&lt;/span&gt;&lt;span style=&#34;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f&#34;&gt;347
+&lt;/span&gt;&lt;span style=&#34;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f&#34;&gt;348
+&lt;/span&gt;&lt;span style=&#34;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f&#34;&gt;349
+&lt;/span&gt;&lt;span style=&#34;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f&#34;&gt;350
+&lt;/span&gt;&lt;span style=&#34;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f&#34;&gt;351
+&lt;/span&gt;&lt;span style=&#34;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f&#34;&gt;352
+&lt;/span&gt;&lt;span style=&#34;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f&#34;&gt;353
+&lt;/span&gt;&lt;span style=&#34;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f&#34;&gt;354
+&lt;/span&gt;&lt;span style=&#34;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f&#34;&gt;355
+&lt;/span&gt;&lt;span style=&#34;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f&#34;&gt;356
+&lt;/span&gt;&lt;span style=&#34;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f&#34;&gt;357
+&lt;/span&gt;&lt;span style=&#34;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f&#34;&gt;358
+&lt;/span&gt;&lt;span style=&#34;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f&#34;&gt;359
+&lt;/span&gt;&lt;span style=&#34;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f&#34;&gt;360
+&lt;/span&gt;&lt;span style=&#34;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f&#34;&gt;361
+&lt;/span&gt;&lt;span style=&#34;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f&#34;&gt;362
+&lt;/span&gt;&lt;span style=&#34;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f&#34;&gt;363
+&lt;/span&gt;&lt;span style=&#34;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f&#34;&gt;364
+&lt;/span&gt;&lt;span style=&#34;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f&#34;&gt;365
+&lt;/span&gt;&lt;span style=&#34;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f&#34;&gt;366
+&lt;/span&gt;&lt;span style=&#34;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f&#34;&gt;367
+&lt;/span&gt;&lt;span style=&#34;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f&#34;&gt;368
+&lt;/span&gt;&lt;span style=&#34;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f&#34;&gt;369
+&lt;/span&gt;&lt;span style=&#34;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f&#34;&gt;370
+&lt;/span&gt;&lt;span style=&#34;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f&#34;&gt;371
+&lt;/span&gt;&lt;span style=&#34;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f&#34;&gt;372
+&lt;/span&gt;&lt;span style=&#34;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f&#34;&gt;373
+&lt;/span&gt;&lt;span style=&#34;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f&#34;&gt;374
+&lt;/span&gt;&lt;span style=&#34;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f&#34;&gt;375
+&lt;/span&gt;&lt;span style=&#34;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f&#34;&gt;376
+&lt;/span&gt;&lt;span style=&#34;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f&#34;&gt;377
+&lt;/span&gt;&lt;span style=&#34;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f&#34;&gt;378
+&lt;/span&gt;&lt;span style=&#34;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f&#34;&gt;379
+&lt;/span&gt;&lt;span style=&#34;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f&#34;&gt;380
+&lt;/span&gt;&lt;span style=&#34;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f&#34;&gt;381
+&lt;/span&gt;&lt;span style=&#34;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f&#34;&gt;382
+&lt;/span&gt;&lt;span style=&#34;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f&#34;&gt;383
+&lt;/span&gt;&lt;span style=&#34;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f&#34;&gt;384
+&lt;/span&gt;&lt;span style=&#34;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f&#34;&gt;385
+&lt;/span&gt;&lt;span style=&#34;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f&#34;&gt;386
+&lt;/span&gt;&lt;span style=&#34;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f&#34;&gt;387
+&lt;/span&gt;&lt;span style=&#34;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f&#34;&gt;388
+&lt;/span&gt;&lt;span style=&#34;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f&#34;&gt;389
+&lt;/span&gt;&lt;span style=&#34;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f&#34;&gt;390
+&lt;/span&gt;&lt;span style=&#34;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f&#34;&gt;391
+&lt;/span&gt;&lt;span style=&#34;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f&#34;&gt;392
+&lt;/span&gt;&lt;span style=&#34;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f&#34;&gt;393
+&lt;/span&gt;&lt;span style=&#34;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f&#34;&gt;394
+&lt;/span&gt;&lt;span style=&#34;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f&#34;&gt;395
+&lt;/span&gt;&lt;span style=&#34;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f&#34;&gt;396
+&lt;/span&gt;&lt;span style=&#34;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f&#34;&gt;397
+&lt;/span&gt;&lt;span style=&#34;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f&#34;&gt;398
+&lt;/span&gt;&lt;span style=&#34;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f&#34;&gt;399
+&lt;/span&gt;&lt;span style=&#34;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f&#34;&gt;400
+&lt;/span&gt;&lt;span style=&#34;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f&#34;&gt;401
+&lt;/span&gt;&lt;span style=&#34;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f&#34;&gt;402
+&lt;/span&gt;&lt;span style=&#34;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f&#34;&gt;403
+&lt;/span&gt;&lt;span style=&#34;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f&#34;&gt;404
+&lt;/span&gt;&lt;span style=&#34;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f&#34;&gt;405
+&lt;/span&gt;&lt;span style=&#34;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f&#34;&gt;406
+&lt;/span&gt;&lt;span style=&#34;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f&#34;&gt;407
+&lt;/span&gt;&lt;span style=&#34;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f&#34;&gt;408
+&lt;/span&gt;&lt;span style=&#34;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f&#34;&gt;409
+&lt;/span&gt;&lt;span style=&#34;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f&#34;&gt;410
+&lt;/span&gt;&lt;span style=&#34;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f&#34;&gt;411
+&lt;/span&gt;&lt;span style=&#34;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f&#34;&gt;412
+&lt;/span&gt;&lt;span style=&#34;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f&#34;&gt;413
+&lt;/span&gt;&lt;span style=&#34;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f&#34;&gt;414
+&lt;/span&gt;&lt;span style=&#34;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f&#34;&gt;415
+&lt;/span&gt;&lt;span style=&#34;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f&#34;&gt;416
+&lt;/span&gt;&lt;span style=&#34;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f&#34;&gt;417
+&lt;/span&gt;&lt;span style=&#34;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f&#34;&gt;418
+&lt;/span&gt;&lt;span style=&#34;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f&#34;&gt;419
+&lt;/span&gt;&lt;span style=&#34;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f&#34;&gt;420
+&lt;/span&gt;&lt;span style=&#34;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f&#34;&gt;421
+&lt;/span&gt;&lt;span style=&#34;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f&#34;&gt;422
+&lt;/span&gt;&lt;span style=&#34;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f&#34;&gt;423
+&lt;/span&gt;&lt;span style=&#34;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f&#34;&gt;424
+&lt;/span&gt;&lt;span style=&#34;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f&#34;&gt;425
+&lt;/span&gt;&lt;span style=&#34;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f&#34;&gt;426
+&lt;/span&gt;&lt;span style=&#34;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f&#34;&gt;427
+&lt;/span&gt;&lt;span style=&#34;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f&#34;&gt;428
+&lt;/span&gt;&lt;span style=&#34;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f&#34;&gt;429
+&lt;/span&gt;&lt;span style=&#34;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f&#34;&gt;430
+&lt;/span&gt;&lt;span style=&#34;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f&#34;&gt;431
+&lt;/span&gt;&lt;span style=&#34;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f&#34;&gt;432
+&lt;/span&gt;&lt;span style=&#34;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f&#34;&gt;433
+&lt;/span&gt;&lt;span style=&#34;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f&#34;&gt;434
+&lt;/span&gt;&lt;span style=&#34;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f&#34;&gt;435
+&lt;/span&gt;&lt;span style=&#34;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f&#34;&gt;436
+&lt;/span&gt;&lt;span style=&#34;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f&#34;&gt;437
+&lt;/span&gt;&lt;span style=&#34;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f&#34;&gt;438
+&lt;/span&gt;&lt;span style=&#34;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f&#34;&gt;439
+&lt;/span&gt;&lt;span style=&#34;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f&#34;&gt;440
+&lt;/span&gt;&lt;span style=&#34;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f&#34;&gt;441
+&lt;/span&gt;&lt;span style=&#34;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f&#34;&gt;442
+&lt;/span&gt;&lt;span style=&#34;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f&#34;&gt;443
+&lt;/span&gt;&lt;span style=&#34;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f&#34;&gt;444
+&lt;/span&gt;&lt;span style=&#34;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f&#34;&gt;445
+&lt;/span&gt;&lt;span style=&#34;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f&#34;&gt;446
+&lt;/span&gt;&lt;span style=&#34;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f&#34;&gt;447
+&lt;/span&gt;&lt;span style=&#34;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f&#34;&gt;448
+&lt;/span&gt;&lt;span style=&#34;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f&#34;&gt;449
+&lt;/span&gt;&lt;span style=&#34;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f&#34;&gt;450
+&lt;/span&gt;&lt;span style=&#34;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f&#34;&gt;451
+&lt;/span&gt;&lt;span style=&#34;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f&#34;&gt;452
+&lt;/span&gt;&lt;span style=&#34;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f&#34;&gt;453
+&lt;/span&gt;&lt;span style=&#34;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f&#34;&gt;454
+&lt;/span&gt;&lt;span style=&#34;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f&#34;&gt;455
+&lt;/span&gt;&lt;span style=&#34;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f&#34;&gt;456
+&lt;/span&gt;&lt;span style=&#34;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f&#34;&gt;457
+&lt;/span&gt;&lt;span style=&#34;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f&#34;&gt;458
+&lt;/span&gt;&lt;span style=&#34;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f&#34;&gt;459
+&lt;/span&gt;&lt;span style=&#34;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f&#34;&gt;460
+&lt;/span&gt;&lt;span style=&#34;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f&#34;&gt;461
+&lt;/span&gt;&lt;span style=&#34;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f&#34;&gt;462
+&lt;/span&gt;&lt;span style=&#34;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f&#34;&gt;463
+&lt;/span&gt;&lt;span style=&#34;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f&#34;&gt;464
+&lt;/span&gt;&lt;span style=&#34;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f&#34;&gt;465
+&lt;/span&gt;&lt;span style=&#34;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f&#34;&gt;466
+&lt;/span&gt;&lt;span style=&#34;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f&#34;&gt;467
+&lt;/span&gt;&lt;span style=&#34;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f&#34;&gt;468
+&lt;/span&gt;&lt;span style=&#34;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f&#34;&gt;469
+&lt;/span&gt;&lt;span style=&#34;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f&#34;&gt;470
+&lt;/span&gt;&lt;span style=&#34;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f&#34;&gt;471
+&lt;/span&gt;&lt;span style=&#34;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f&#34;&gt;472
+&lt;/span&gt;&lt;span style=&#34;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f&#34;&gt;473
+&lt;/span&gt;&lt;span style=&#34;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f&#34;&gt;474
+&lt;/span&gt;&lt;span style=&#34;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f&#34;&gt;475
+&lt;/span&gt;&lt;span style=&#34;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f&#34;&gt;476
+&lt;/span&gt;&lt;span style=&#34;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f&#34;&gt;477
+&lt;/span&gt;&lt;span style=&#34;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f&#34;&gt;478
+&lt;/span&gt;&lt;span style=&#34;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f&#34;&gt;479
+&lt;/span&gt;&lt;span style=&#34;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f&#34;&gt;480
+&lt;/span&gt;&lt;span style=&#34;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f&#34;&gt;481
+&lt;/span&gt;&lt;span style=&#34;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f&#34;&gt;482
+&lt;/span&gt;&lt;span style=&#34;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f&#34;&gt;483
+&lt;/span&gt;&lt;span style=&#34;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f&#34;&gt;484
+&lt;/span&gt;&lt;span style=&#34;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f&#34;&gt;485
+&lt;/span&gt;&lt;span style=&#34;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f&#34;&gt;486
+&lt;/span&gt;&lt;span style=&#34;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f&#34;&gt;487
+&lt;/span&gt;&lt;span style=&#34;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f&#34;&gt;488
+&lt;/span&gt;&lt;span style=&#34;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f&#34;&gt;489
+&lt;/span&gt;&lt;span style=&#34;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f&#34;&gt;490
+&lt;/span&gt;&lt;span style=&#34;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f&#34;&gt;491
+&lt;/span&gt;&lt;span style=&#34;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f&#34;&gt;492
+&lt;/span&gt;&lt;span style=&#34;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f&#34;&gt;493
+&lt;/span&gt;&lt;span style=&#34;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f&#34;&gt;494
+&lt;/span&gt;&lt;span style=&#34;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f&#34;&gt;495
+&lt;/span&gt;&lt;span style=&#34;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f&#34;&gt;496
+&lt;/span&gt;&lt;span style=&#34;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f&#34;&gt;497
+&lt;/span&gt;&lt;span style=&#34;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f&#34;&gt;498
+&lt;/span&gt;&lt;span style=&#34;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f&#34;&gt;499
+&lt;/span&gt;&lt;span style=&#34;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f&#34;&gt;500
+&lt;/span&gt;&lt;span style=&#34;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f&#34;&gt;501
+&lt;/span&gt;&lt;span style=&#34;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f&#34;&gt;502
+&lt;/span&gt;&lt;span style=&#34;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f&#34;&gt;503
+&lt;/span&gt;&lt;span style=&#34;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f&#34;&gt;504
+&lt;/span&gt;&lt;span style=&#34;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f&#34;&gt;505
+&lt;/span&gt;&lt;span style=&#34;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f&#34;&gt;506
+&lt;/span&gt;&lt;span style=&#34;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f&#34;&gt;507
+&lt;/span&gt;&lt;span style=&#34;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f&#34;&gt;508
+&lt;/span&gt;&lt;span style=&#34;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f&#34;&gt;509
+&lt;/span&gt;&lt;span style=&#34;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f&#34;&gt;510
+&lt;/span&gt;&lt;span style=&#34;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f&#34;&gt;511
+&lt;/span&gt;&lt;span style=&#34;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f&#34;&gt;512
+&lt;/span&gt;&lt;span style=&#34;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f&#34;&gt;513
+&lt;/span&gt;&lt;span style=&#34;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f&#34;&gt;514
+&lt;/span&gt;&lt;span style=&#34;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f&#34;&gt;515
+&lt;/span&gt;&lt;span style=&#34;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f&#34;&gt;516
+&lt;/span&gt;&lt;span style=&#34;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f&#34;&gt;517
+&lt;/span&gt;&lt;span style=&#34;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f&#34;&gt;518
+&lt;/span&gt;&lt;span style=&#34;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f&#34;&gt;519
+&lt;/span&gt;&lt;span style=&#34;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f&#34;&gt;520
+&lt;/span&gt;&lt;span style=&#34;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f&#34;&gt;521
+&lt;/span&gt;&lt;span style=&#34;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f&#34;&gt;522
+&lt;/span&gt;&lt;span style=&#34;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f&#34;&gt;523
+&lt;/span&gt;&lt;span style=&#34;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f&#34;&gt;524
+&lt;/span&gt;&lt;span style=&#34;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f&#34;&gt;525
+&lt;/span&gt;&lt;span style=&#34;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f&#34;&gt;526
+&lt;/span&gt;&lt;span style=&#34;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f&#34;&gt;527
+&lt;/span&gt;&lt;span style=&#34;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f&#34;&gt;528
+&lt;/span&gt;&lt;span style=&#34;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f&#34;&gt;529
+&lt;/span&gt;&lt;span style=&#34;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f&#34;&gt;530
+&lt;/span&gt;&lt;span style=&#34;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f&#34;&gt;531
+&lt;/span&gt;&lt;span style=&#34;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f&#34;&gt;532
+&lt;/span&gt;&lt;span style=&#34;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f&#34;&gt;533
+&lt;/span&gt;&lt;span style=&#34;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f&#34;&gt;534
+&lt;/span&gt;&lt;span style=&#34;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f&#34;&gt;535
+&lt;/span&gt;&lt;span style=&#34;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f&#34;&gt;536
+&lt;/span&gt;&lt;span style=&#34;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f&#34;&gt;537
+&lt;/span&gt;&lt;span style=&#34;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f&#34;&gt;538
+&lt;/span&gt;&lt;span style=&#34;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f&#34;&gt;539
+&lt;/span&gt;&lt;span style=&#34;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f&#34;&gt;540
+&lt;/span&gt;&lt;span style=&#34;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f&#34;&gt;541
+&lt;/span&gt;&lt;span style=&#34;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f&#34;&gt;542
+&lt;/span&gt;&lt;span style=&#34;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f&#34;&gt;543
+&lt;/span&gt;&lt;span style=&#34;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f&#34;&gt;544
+&lt;/span&gt;&lt;span style=&#34;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f&#34;&gt;545
+&lt;/span&gt;&lt;span style=&#34;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f&#34;&gt;546
+&lt;/span&gt;&lt;span style=&#34;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f&#34;&gt;547
+&lt;/span&gt;&lt;span style=&#34;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f&#34;&gt;548
+&lt;/span&gt;&lt;span style=&#34;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f&#34;&gt;549
+&lt;/span&gt;&lt;span style=&#34;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f&#34;&gt;550
+&lt;/span&gt;&lt;span style=&#34;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f&#34;&gt;551
+&lt;/span&gt;&lt;span style=&#34;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f&#34;&gt;552
+&lt;/span&gt;&lt;span style=&#34;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f&#34;&gt;553
+&lt;/span&gt;&lt;span style=&#34;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f&#34;&gt;554
+&lt;/span&gt;&lt;span style=&#34;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f&#34;&gt;555
+&lt;/span&gt;&lt;span style=&#34;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f&#34;&gt;556
+&lt;/span&gt;&lt;span style=&#34;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f&#34;&gt;557
+&lt;/span&gt;&lt;span style=&#34;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f&#34;&gt;558
+&lt;/span&gt;&lt;span style=&#34;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f&#34;&gt;559
+&lt;/span&gt;&lt;span style=&#34;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f&#34;&gt;560
+&lt;/span&gt;&lt;span style=&#34;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f&#34;&gt;561
+&lt;/span&gt;&lt;span style=&#34;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f&#34;&gt;562
+&lt;/span&gt;&lt;span style=&#34;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f&#34;&gt;563
+&lt;/span&gt;&lt;span style=&#34;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f&#34;&gt;564
+&lt;/span&gt;&lt;span style=&#34;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f&#34;&gt;565
+&lt;/span&gt;&lt;span style=&#34;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f&#34;&gt;566
+&lt;/span&gt;&lt;span style=&#34;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f&#34;&gt;567
+&lt;/span&gt;&lt;span style=&#34;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f&#34;&gt;568
+&lt;/span&gt;&lt;span style=&#34;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f&#34;&gt;569
+&lt;/span&gt;&lt;span style=&#34;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f&#34;&gt;570
+&lt;/span&gt;&lt;span style=&#34;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f&#34;&gt;571
+&lt;/span&gt;&lt;span style=&#34;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f&#34;&gt;572
+&lt;/span&gt;&lt;span style=&#34;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f&#34;&gt;573
+&lt;/span&gt;&lt;span style=&#34;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f&#34;&gt;574
+&lt;/span&gt;&lt;span style=&#34;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f&#34;&gt;575
+&lt;/span&gt;&lt;span style=&#34;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f&#34;&gt;576
+&lt;/span&gt;&lt;span style=&#34;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f&#34;&gt;577
+&lt;/span&gt;&lt;span style=&#34;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f&#34;&gt;578
+&lt;/span&gt;&lt;span style=&#34;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f&#34;&gt;579
+&lt;/span&gt;&lt;span style=&#34;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f&#34;&gt;580
+&lt;/span&gt;&lt;span style=&#34;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f&#34;&gt;581
+&lt;/span&gt;&lt;span style=&#34;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f&#34;&gt;582
+&lt;/span&gt;&lt;span style=&#34;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f&#34;&gt;583
+&lt;/span&gt;&lt;span style=&#34;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f&#34;&gt;584
+&lt;/span&gt;&lt;span style=&#34;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f&#34;&gt;585
+&lt;/span&gt;&lt;span style=&#34;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f&#34;&gt;586
+&lt;/span&gt;&lt;span style=&#34;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f&#34;&gt;587
+&lt;/span&gt;&lt;span style=&#34;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f&#34;&gt;588
+&lt;/span&gt;&lt;span style=&#34;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f&#34;&gt;589
+&lt;/span&gt;&lt;span style=&#34;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f&#34;&gt;590
+&lt;/span&gt;&lt;span style=&#34;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f&#34;&gt;591
+&lt;/span&gt;&lt;span style=&#34;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f&#34;&gt;592
+&lt;/span&gt;&lt;span style=&#34;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f&#34;&gt;593
+&lt;/span&gt;&lt;span style=&#34;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f&#34;&gt;594
+&lt;/span&gt;&lt;span style=&#34;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f&#34;&gt;595
+&lt;/span&gt;&lt;span style=&#34;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f&#34;&gt;596
+&lt;/span&gt;&lt;span style=&#34;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f&#34;&gt;597
+&lt;/span&gt;&lt;span style=&#34;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f&#34;&gt;598
+&lt;/span&gt;&lt;span style=&#34;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f&#34;&gt;599
+&lt;/span&gt;&lt;span style=&#34;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f&#34;&gt;600
+&lt;/span&gt;&lt;span style=&#34;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f&#34;&gt;601
+&lt;/span&gt;&lt;span style=&#34;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f&#34;&gt;602
+&lt;/span&gt;&lt;span style=&#34;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f&#34;&gt;603
+&lt;/span&gt;&lt;span style=&#34;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f&#34;&gt;604
+&lt;/span&gt;&lt;span style=&#34;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f&#34;&gt;605
+&lt;/span&gt;&lt;span style=&#34;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f&#34;&gt;606
+&lt;/span&gt;&lt;span style=&#34;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f&#34;&gt;607
+&lt;/span&gt;&lt;span style=&#34;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f&#34;&gt;608
+&lt;/span&gt;&lt;span style=&#34;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f&#34;&gt;609
+&lt;/span&gt;&lt;span style=&#34;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f&#34;&gt;610
+&lt;/span&gt;&lt;span style=&#34;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f&#34;&gt;611
+&lt;/span&gt;&lt;span style=&#34;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f&#34;&gt;612
+&lt;/span&gt;&lt;span style=&#34;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f&#34;&gt;613
+&lt;/span&gt;&lt;span style=&#34;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f&#34;&gt;614
+&lt;/span&gt;&lt;span style=&#34;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f&#34;&gt;615
+&lt;/span&gt;&lt;span style=&#34;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f&#34;&gt;616
+&lt;/span&gt;&lt;span style=&#34;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f&#34;&gt;617
+&lt;/span&gt;&lt;span style=&#34;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f&#34;&gt;618
+&lt;/span&gt;&lt;span style=&#34;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f&#34;&gt;619
+&lt;/span&gt;&lt;span style=&#34;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f&#34;&gt;620
+&lt;/span&gt;&lt;span style=&#34;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f&#34;&gt;621
+&lt;/span&gt;&lt;span style=&#34;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f&#34;&gt;622
+&lt;/span&gt;&lt;span style=&#34;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f&#34;&gt;623
+&lt;/span&gt;&lt;span style=&#34;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f&#34;&gt;624
+&lt;/span&gt;&lt;span style=&#34;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f&#34;&gt;625
+&lt;/span&gt;&lt;span style=&#34;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f&#34;&gt;626
+&lt;/span&gt;&lt;span style=&#34;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f&#34;&gt;627
+&lt;/span&gt;&lt;span style=&#34;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f&#34;&gt;628
+&lt;/span&gt;&lt;span style=&#34;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f&#34;&gt;629
+&lt;/span&gt;&lt;span style=&#34;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f&#34;&gt;630
+&lt;/span&gt;&lt;span style=&#34;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f&#34;&gt;631
+&lt;/span&gt;&lt;span style=&#34;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f&#34;&gt;632
+&lt;/span&gt;&lt;span style=&#34;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f&#34;&gt;633
+&lt;/span&gt;&lt;span style=&#34;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f&#34;&gt;634
+&lt;/span&gt;&lt;span style=&#34;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f&#34;&gt;635
+&lt;/span&gt;&lt;span style=&#34;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f&#34;&gt;636
+&lt;/span&gt;&lt;span style=&#34;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f&#34;&gt;637
+&lt;/span&gt;&lt;span style=&#34;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f&#34;&gt;638
+&lt;/span&gt;&lt;span style=&#34;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f&#34;&gt;639
+&lt;/span&gt;&lt;span style=&#34;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f&#34;&gt;640
+&lt;/span&gt;&lt;span style=&#34;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f&#34;&gt;641
+&lt;/span&gt;&lt;span style=&#34;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f&#34;&gt;642
+&lt;/span&gt;&lt;span style=&#34;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f&#34;&gt;643
+&lt;/span&gt;&lt;span style=&#34;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f&#34;&gt;644
+&lt;/span&gt;&lt;span style=&#34;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f&#34;&gt;645
+&lt;/span&gt;&lt;span style=&#34;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f&#34;&gt;646
+&lt;/span&gt;&lt;span style=&#34;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f&#34;&gt;647
+&lt;/span&gt;&lt;span style=&#34;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f&#34;&gt;648
+&lt;/span&gt;&lt;span style=&#34;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f&#34;&gt;649
+&lt;/span&gt;&lt;span style=&#34;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f&#34;&gt;650
+&lt;/span&gt;&lt;span style=&#34;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f&#34;&gt;651
+&lt;/span&gt;&lt;span style=&#34;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f&#34;&gt;652
+&lt;/span&gt;&lt;span style=&#34;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f&#34;&gt;653
+&lt;/span&gt;&lt;span style=&#34;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f&#34;&gt;654
+&lt;/span&gt;&lt;span style=&#34;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f&#34;&gt;655
+&lt;/span&gt;&lt;span style=&#34;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f&#34;&gt;656
+&lt;/span&gt;&lt;span style=&#34;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f&#34;&gt;657
+&lt;/span&gt;&lt;span style=&#34;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f&#34;&gt;658
+&lt;/span&gt;&lt;span style=&#34;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f&#34;&gt;659
+&lt;/span&gt;&lt;span style=&#34;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f&#34;&gt;660
+&lt;/span&gt;&lt;span style=&#34;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f&#34;&gt;661
+&lt;/span&gt;&lt;span style=&#34;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f&#34;&gt;662
+&lt;/span&gt;&lt;span style=&#34;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f&#34;&gt;663
+&lt;/span&gt;&lt;span style=&#34;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f&#34;&gt;664
+&lt;/span&gt;&lt;span style=&#34;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f&#34;&gt;665
+&lt;/span&gt;&lt;span style=&#34;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f&#34;&gt;666
+&lt;/span&gt;&lt;span style=&#34;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f&#34;&gt;667
+&lt;/span&gt;&lt;span style=&#34;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f&#34;&gt;668
+&lt;/span&gt;&lt;span style=&#34;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f&#34;&gt;669
+&lt;/span&gt;&lt;span style=&#34;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f&#34;&gt;670
+&lt;/span&gt;&lt;span style=&#34;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f&#34;&gt;671
+&lt;/span&gt;&lt;span style=&#34;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f&#34;&gt;672
+&lt;/span&gt;&lt;span style=&#34;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f&#34;&gt;673
+&lt;/span&gt;&lt;span style=&#34;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f&#34;&gt;674
+&lt;/span&gt;&lt;span style=&#34;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f&#34;&gt;675
+&lt;/span&gt;&lt;span style=&#34;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f&#34;&gt;676
+&lt;/span&gt;&lt;span style=&#34;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f&#34;&gt;677
+&lt;/span&gt;&lt;span style=&#34;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f&#34;&gt;678
+&lt;/span&gt;&lt;span style=&#34;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f&#34;&gt;679
+&lt;/span&gt;&lt;span style=&#34;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f&#34;&gt;680
+&lt;/span&gt;&lt;span style=&#34;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f&#34;&gt;681
+&lt;/span&gt;&lt;span style=&#34;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f&#34;&gt;682
+&lt;/span&gt;&lt;span style=&#34;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f&#34;&gt;683
+&lt;/span&gt;&lt;span style=&#34;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f&#34;&gt;684
+&lt;/span&gt;&lt;span style=&#34;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f&#34;&gt;685
+&lt;/span&gt;&lt;span style=&#34;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f&#34;&gt;686
+&lt;/span&gt;&lt;span style=&#34;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f&#34;&gt;687
+&lt;/span&gt;&lt;span style=&#34;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f&#34;&gt;688
+&lt;/span&gt;&lt;span style=&#34;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f&#34;&gt;689
+&lt;/span&gt;&lt;span style=&#34;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f&#34;&gt;690
+&lt;/span&gt;&lt;span style=&#34;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f&#34;&gt;691
+&lt;/span&gt;&lt;span style=&#34;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f&#34;&gt;692
+&lt;/span&gt;&lt;span style=&#34;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f&#34;&gt;693
+&lt;/span&gt;&lt;span style=&#34;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f&#34;&gt;694
+&lt;/span&gt;&lt;span style=&#34;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f&#34;&gt;695
+&lt;/span&gt;&lt;span style=&#34;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f&#34;&gt;696
+&lt;/span&gt;&lt;span style=&#34;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f&#34;&gt;697
+&lt;/span&gt;&lt;span style=&#34;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f&#34;&gt;698
+&lt;/span&gt;&lt;span style=&#34;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f&#34;&gt;699
+&lt;/span&gt;&lt;span style=&#34;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f&#34;&gt;700
+&lt;/span&gt;&lt;span style=&#34;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f&#34;&gt;701
+&lt;/span&gt;&lt;span style=&#34;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f&#34;&gt;702
+&lt;/span&gt;&lt;span style=&#34;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f&#34;&gt;703
+&lt;/span&gt;&lt;span style=&#34;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f&#34;&gt;704
+&lt;/span&gt;&lt;span style=&#34;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f&#34;&gt;705
+&lt;/span&gt;&lt;span style=&#34;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f&#34;&gt;706
+&lt;/span&gt;&lt;span style=&#34;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f&#34;&gt;707
+&lt;/span&gt;&lt;span style=&#34;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f&#34;&gt;708
+&lt;/span&gt;&lt;span style=&#34;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f&#34;&gt;709
+&lt;/span&gt;&lt;span style=&#34;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f&#34;&gt;710
+&lt;/span&gt;&lt;span style=&#34;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f&#34;&gt;711
+&lt;/span&gt;&lt;span style=&#34;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f&#34;&gt;712
+&lt;/span&gt;&lt;span style=&#34;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f&#34;&gt;713
+&lt;/span&gt;&lt;span style=&#34;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f&#34;&gt;714
+&lt;/span&gt;&lt;span style=&#34;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f&#34;&gt;715
+&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/td&gt;
+&lt;td style=&#34;vertical-align:top;padding:0;margin:0;border:0;;width:100%&#34;&gt;
+&lt;pre style=&#34;color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4&#34;&gt;&lt;code class=&#34;language-R&#34; data-lang=&#34;R&#34;&gt;```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+
+library(MASS)
+library(tidyverse)
+library(nnet)
+library(foreach)
+library(doMC)
+library(class)
+library(glmnet)
+library(caret)
+library(tree)
+library(randomForest)
+library(pROC)
+library(gbm)
+library(xgboost)
+library(xtable)
+
+library(glmnet)
+registerDoMC(10)
+```
+
+&lt;span style=&#34;color:#75715e&#34;&gt;# Q1&lt;/span&gt;
+```{r}
+dat.hapmap &amp;lt;- read.csv(&amp;#34;/Users/hanchao/Library/Mobile Documents/com~apple~CloudDocs/
+Courses/Cornell Semester 3/Statistical Learning/FinalProject/SimulatedHapMap.csv&amp;#34;)
+
+
+```
+
+```{r}
+dat.exm &amp;lt;- dat.hapmap[,-1]
+
+for (i in 1:ncol(dat.exm)) {
+  if(!is.numeric(dat.exm[,i])){
+    dat.exm[,i] &amp;lt;- as.numeric(as.character(dat.exm[,i]))
+  }
+  
+}
+
+dat.exm[dat.exm &amp;gt; 0] &amp;lt;- 1
+
+
+dat.exm &amp;lt;- as.data.frame(t(dat.exm))
+
+
+t1 &amp;lt;- Sys.time()
+
+smi &amp;lt;- list()
+
+for (i in 1:ncol(dat.exm)) {
+  a1 = dat.exm[,i] == dat.exm[,1:ncol(dat.exm)] &amp;amp; dat.exm[,i] != 0
+  a2 = dat.exm[,i] != 0 |  dat.exm[,1:ncol(dat.exm)] != 0
+  smi[[i]] &amp;lt;- colSums(a1)/colSums(a2)
+  print(i)
+}
+
+dat.jaccard &amp;lt;- do.call(cbind, smi)
+dat.jaccard
+
+
+t2 &amp;lt;- Sys.time()
+
+t2-t1
+
+dim(dat.jaccard)
+
+
+```
+Time difference of &lt;span style=&#34;color:#ae81ff&#34;&gt;9.851856&lt;/span&gt; mins
+Modify Chunk OptionsRun Current ChunkModify Chunk OptionsRun 
+All Chunks AboveRun Current ChunkModify Chunk OptionsRun All 
+Chunks AboveRun Current ChunkModify Chunk OptionsRun All Chunks 
+AboveRun Current Chunk
+Console&lt;span style=&#34;color:#f92672&#34;&gt;~/&lt;/span&gt;
+Console
+Terminal
+
+&lt;span style=&#34;color:#f92672&#34;&gt;~/&lt;/span&gt;			
+
+```{r}
+write.csv(dat.jaccard, &amp;#34;/Users/hanchao/Library/Mobile Documents/
+com~apple~CloudDocs/Courses/Cornell Semester 3/Statistical Learning/FinalProject/jaccard.csv&amp;#34;)
+
+```
+
+```{r}
+dat.jaccard &amp;lt;- read.csv(&amp;#34;/Users/hanchao/Library/Mobile Documents/
+com~apple~CloudDocs/Courses/Cornell Semester 3/Statistical Learning/FinalProject/jaccard.csv&amp;#34;)
+dat.jaccard &amp;lt;- dat.jaccard[,2:ncol(dat.jaccard)]
+```
+
+```{r}
+obj.prcomp &amp;lt;- prcomp(dat.jaccard, scale = TRUE)
+```
+
+```{r}
+par(mfrow = c(1,2))
+
+plot( (obj.prcomp$sdev^2)/sum(obj.prcomp$sdev^2), type = &amp;#34;l&amp;#34;, ylab = &amp;#34;variance explained&amp;#34;)
+points(x = 2, y = ((obj.prcomp$sdev^2)/sum(obj.prcomp$sdev^2))[2], col = &amp;#34;red&amp;#34;, pch = 20)
+plot( cumsum(obj.prcomp$sdev^2 )/ sum(obj.prcomp$sdev^2) , type = &amp;#34;l&amp;#34;, 
+ylab = &amp;#34;percentage of variance explained&amp;#34;)
+points(x = 2, y = ((cumsum(obj.prcomp$sdev^2 )/ sum(obj.prcomp$sdev^2)))[2], col = &amp;#34;red&amp;#34;, pch = 20)
+
+```
+
+```{r}
+plot(-obj.prcomp$x[,1],obj.prcomp$x[,2], col = dat.hapmap$X, pch = 20, xlab = &amp;#34;First PCA&amp;#34;, 
+ylab = &amp;#34;Second PCA&amp;#34;)
+legend(&amp;#34;top&amp;#34;, y = as.character(unique(dat.hapmap$X)), col = c(&amp;#34;black&amp;#34;, &amp;#34;red&amp;#34;), pch = 20)
+```
+
+
+```{r}
+dat.ggplot &amp;lt;- data.frame(pca1 = obj.prcomp$x[,1],
+pca2 = obj.prcomp$x[,2],
+label = dat.hapmap$X)
+```
+
+&lt;span style=&#34;color:#75715e&#34;&gt;# Q 2&lt;/span&gt;
+
+```{r}
+dat.arr &amp;lt;- read.table(&amp;#34;/Users/hanchao/Library/Mobile Documents/com~apple~CloudDocs/
+Courses/Cornell Semester 3/Statistical Learning/FinalProject/arrhythmia.data&amp;#34;, sep = &amp;#34;,&amp;#34;, header = F)
+
+names(dat.arr)[ncol(dat.arr)] &amp;lt;- &amp;#34;Y&amp;#34;
+
+
+
+
+dat.arr$Y &amp;lt;- ifelse(dat.arr$Y &amp;gt; 1, yes = 1, no = 0)
+
+```
+
+```{r}
+for (i in names(dat.arr)) {
+  if(!is.numeric(dat.arr[,i])){
+    print(i)
+  }
+}
+
+for (i in names(dat.arr)) {
+  dat.arr[,i][dat.arr[,i] == &amp;#34;?&amp;#34;] &amp;lt;- NA
+  dat.arr[,i] &amp;lt;- as.numeric(dat.arr[,i])
+  
+  if(max(dat.arr[,i], na.rm = T) == 16 &amp;amp; min(dat.arr[,i], na.rm = T) == 1){
+    print(i)
+  }
+}
+
+
+
+for (i in names(dat.arr)) {
+  if( mean(is.na(dat.arr[,i])) &amp;gt; 0.5 ){
+    print(i)
+  }
+ 
+  
+}
+
+#dat.arr &amp;lt;- dat.arr[,-which(names(dat.arr) == &amp;#34;V14&amp;#34;)]
+
+```
+&lt;span style=&#34;color:#75715e&#34;&gt;## LDA&lt;/span&gt;
+
+```{r}
+cv.lda &amp;lt;- function(data = data, n = &amp;#34;fold&amp;#34;, k = &amp;#34;knn-numer&amp;#34;, y = &amp;#34;Class&amp;#34;){
+  knn.error &amp;lt;- NULL
+  dd &amp;lt;- data[sample(nrow(data), nrow(data), replace = F),]
+  dat.splited &amp;lt;- split(dd, rep(1:n, each=nrow(dd)/(n)))
+
+  for (i in 1:n) {
+    train &amp;lt;- dat.splited[-i]
+    train &amp;lt;- do.call(rbind, train)
+    valid &amp;lt;- dat.splited[[i]]
+      
+    data.frame(
+        vairable = 1:279,
+        cor = as.numeric(cor(dat.arr$Y, dat.arr[,-280]))
+        ) %&amp;gt;%
+        arrange(desc(abs(cor))) -&amp;gt; dat.cor
+  }
+  
+  k.error &amp;lt;- NULL
+  for (K in k) {
+    fit.lda &amp;lt;- lda(Y~., data = train[, c(dat.cor$vairable[1:K], which(names(train) == y)) ]  )
+    pred &amp;lt;- predict(fit.lda, newdata = valid)
+    k.error[K] &amp;lt;- mean(pred$class != valid$Y)
+    
+  }
+  k.error
+  
+}
+
+err.lda &amp;lt;- cv.lda(data = dat.arr, n = 5, k = 1:100, y = &amp;#34;Y&amp;#34;)
+
+
+
+```
+
+
+```{r}
+
+cv.lda &amp;lt;- function(data = data, n = &amp;#34;fold&amp;#34;, k = &amp;#34;knn-numer&amp;#34;, y = &amp;#34;Class&amp;#34;){
+  knn.error &amp;lt;- NULL
+  dd &amp;lt;- data[sample(nrow(data), nrow(data), replace = F),]
+  dat.splited &amp;lt;- split(dd, rep(1:n, each=nrow(dd)/(n)))
+  for (K in k) {
+    k.error &amp;lt;- NULL
+    for (i in 1:n) {
+      train &amp;lt;- dat.splited[-i]
+      train &amp;lt;- do.call(rbind, train)
+      valid &amp;lt;- dat.splited[[i]]
+      
+      data.frame(
+        vairable = 1:279,
+        cor = as.numeric(cor(dat.arr$Y, dat.arr[,-280]))
+        ) %&amp;gt;%
+        arrange(desc(abs(cor))) -&amp;gt; dat.cor
+      
+      dat.train &amp;lt;- train[,c(dat.cor$vairable[1:K],280)]
+      dat.valid &amp;lt;- valid[,c(dat.cor$vairable[1:K],280)]
+      fit.lda &amp;lt;- lda(Y~., data = dat.train)
+      pred &amp;lt;- predict(fit.lda, newdata = dat.valid)
+      k.error[i] &amp;lt;- mean(pred$class != dat.valid$Y)
+      
+      }
+    knn.error[K] &amp;lt;- mean(k.error)
+  }
+  
+  z &amp;lt;- data.frame(k = k,
+                  error = knn.error)
+  z
+}
+
+
+err.lda &amp;lt;- cv.lda(data = dat.arr, n = 10, k = 1:50, y = &amp;#34;Y&amp;#34;)
+err.lda[which.min(err.lda$error),]
+
+```
+
+&lt;span style=&#34;color:#75715e&#34;&gt;## Logistic&lt;/span&gt;
+
+```{r}
+cv.logistic &amp;lt;- function(data = data, n = &amp;#34;fold&amp;#34;, k = &amp;#34;knn-numer&amp;#34;, y = &amp;#34;Class&amp;#34;){
+  knn.error &amp;lt;- NULL
+  dd &amp;lt;- data[sample(nrow(data), nrow(data), replace = F),]
+  dat.splited &amp;lt;- split(dd, rep(1:n, each=nrow(dd)/(n)))
+
+  for (i in 1:n) {
+    train &amp;lt;- dat.splited[-i]
+    train &amp;lt;- do.call(rbind, train)
+    valid &amp;lt;- dat.splited[[i]]
+      
+    data.frame(
+        vairable = 1:279,
+        cor = as.numeric(cor(dat.arr$Y, dat.arr[,-280]))
+        ) %&amp;gt;%
+        arrange(desc(abs(cor))) -&amp;gt; dat.cor
+  }
+  
+  k.error &amp;lt;- NULL
+  for (K in k) {
+    fit.lda &amp;lt;- glm(Y~., data = train[, c(dat.cor$vairable[1:K], 
+    which(names(train) == y)) ] , family = binomial() )
+    pred &amp;lt;- predict(fit.lda, newdata = valid, type = &amp;#34;response&amp;#34;)
+    dat.roc &amp;lt;- roc(valid[,y]~pred)
+    thres &amp;lt;- coords(dat.roc,&amp;#34;best&amp;#34;)[1]
+    pred &amp;lt;- ifelse(pred &amp;lt; thres, yes = 0, no = 1)
+    k.error[K] &amp;lt;- mean(pred != valid$Y)
+    
+  }
+  k.error
+  
+}
+
+err.logistic &amp;lt;- cv.logistic(data = dat.arr, n = 5, k = 1:100, y = &amp;#34;Y&amp;#34;)
+
+```
+
+```{r}
+
+cv.multinomial &amp;lt;- function(data = data, n = &amp;#34;fold&amp;#34;, k = &amp;#34;knn-numer&amp;#34;, y = &amp;#34;Class&amp;#34;){
+  knn.error &amp;lt;- NULL
+  dd &amp;lt;- data[sample(nrow(data), nrow(data), replace = F),]
+  dat.splited &amp;lt;- split(dd, rep(1:n, each=nrow(dd)/(n)))
+  for (K in k) {
+    k.error &amp;lt;- NULL
+    for (i in 1:n) {
+      train &amp;lt;- dat.splited[-i]
+      train &amp;lt;- do.call(rbind, train)
+      valid &amp;lt;- dat.splited[[i]]
+      
+      data.frame(
+        vairable = 1:279,
+        cor = as.numeric(cor(dat.arr$Y, dat.arr[,-280]))
+        ) %&amp;gt;%
+        arrange(desc(abs(cor))) -&amp;gt; dat.cor
+      
+      dat.train &amp;lt;- train[,c(dat.cor$vairable[1:K],280)]
+      dat.valid &amp;lt;- valid[,c(dat.cor$vairable[1:K],280)]
+      fit.lda &amp;lt;- glm(Y~., data = dat.train, family = binomial)
+      #fit.lda &amp;lt;- stepAIC(fit.lda)
+      pred &amp;lt;- predict(fit.lda, newdata = dat.valid, type = &amp;#34;response&amp;#34;)
+      dat.roc &amp;lt;- roc(dat.valid$Y ~ pred)
+      thres &amp;lt;-coords(dat.roc, &amp;#34;best&amp;#34;)[1]
+      pred &amp;lt;- ifelse(pred &amp;lt; thres, yes = 0, no = 1)
+      
+      k.error[i] &amp;lt;- mean(pred != dat.valid$Y)
+      
+      
+      }
+    knn.error[K] &amp;lt;- mean(k.error)
+
+    
+  }
+  
+  z &amp;lt;- data.frame(k = k,
+                  error = knn.error)
+  z
+}
+
+
+err.multinomial &amp;lt;- cv.multinomial(data = dat.arr, n = 5, k = 1:100, y = &amp;#34;Y&amp;#34;)
+
+err.multinomial[which.min(err.multinomial$error),]
+
+```
+&lt;span style=&#34;color:#75715e&#34;&gt;## KNN&lt;/span&gt;
+
+```{r}
+cv.knn &amp;lt;- function(data = data, n = &amp;#34;fold&amp;#34;, k = &amp;#34;knn-numer&amp;#34;, y = &amp;#34;Class&amp;#34;){
+  knn.error &amp;lt;- NULL
+  dd &amp;lt;- data[sample(nrow(data), nrow(data), replace = F),]
+  dat.splited &amp;lt;- split(dd, rep(1:n, each=nrow(dd)/(n)))
+  for (K in k) {
+    k.error &amp;lt;- NULL
+    for (i in 1:n) {
+      train &amp;lt;- dat.splited[-i]
+      train &amp;lt;- do.call(rbind, train)
+      valid &amp;lt;- dat.splited[[i]]
+      Train &amp;lt;- data.frame(scale(train[,-which(names(train) == y)]),
+                    Class = train[,y])
+      Valid &amp;lt;- data.frame(scale(valid[,-which(names(valid) == y)]),
+                    Class = valid[,y])
+      pred.knn &amp;lt;- knn(Train[,-which(colnames(Train) == &amp;#34;Class&amp;#34;)], 
+      Valid[,-which(colnames(Valid) == &amp;#34;Class&amp;#34;)], Train[,&amp;#34;Class&amp;#34;], k = K)
+      k.error[i] &amp;lt;- mean(pred.knn != Valid[,&amp;#34;Class&amp;#34;])
+      }
+    knn.error[K] &amp;lt;- mean(k.error)
+  }
+  
+  z &amp;lt;- data.frame(k = k,
+                  knn.error)
+  z
+}
+
+dat.arr.knn &amp;lt;- dat.arr[,colMeans(is.na(dat.arr)) == 0]
+
+
+for (i in names(dat.arr.knn)) {
+  if(mean(duplicated(dat.arr.knn[,i])) &amp;gt; 0.9 ){
+    dat.arr.knn[,i] &amp;lt;- NA
+  }
+}
+
+dat.arr.knn &amp;lt;- dat.arr.knn[,colMeans(is.na(dat.arr.knn)) == 0 ]
+
+dat.arr.knn &amp;lt;- data.frame(dat.arr.knn, Y = dat.arr$Y)
+
+err.knn &amp;lt;- cv.knn(data = dat.arr.knn, n = 5, k = 1:100, y = &amp;#34;Y&amp;#34;)
+
+```
+
+```{r}
+cv.qda &amp;lt;- function(data = data, n = &amp;#34;fold&amp;#34;, k = &amp;#34;knn-numer&amp;#34;, y = &amp;#34;Class&amp;#34;){
+  knn.error &amp;lt;- NULL
+  dd &amp;lt;- data[sample(nrow(data), nrow(data), replace = F),]
+  dat.splited &amp;lt;- split(dd, rep(1:n, each=nrow(dd)/(n)))
+
+  for (i in 1:n) {
+    train &amp;lt;- dat.splited[-i]
+    train &amp;lt;- do.call(rbind, train)
+    valid &amp;lt;- dat.splited[[i]]
+      
+    data.frame(
+        vairable = 1:279,
+        cor = as.numeric(cor(dat.arr$Y, dat.arr[,-280]))
+        ) %&amp;gt;%
+        arrange(desc(abs(cor))) -&amp;gt; dat.cor
+  }
+  
+  k.error &amp;lt;- NULL
+  for (K in k) {
+    fit.lda &amp;lt;- qda(Y~., data = train[, c(dat.cor$vairable[1:K], which(names(train) == y)) ]  )
+    pred &amp;lt;- predict(fit.lda, newdata = valid)
+    k.error[K] &amp;lt;- mean(pred$class != valid$Y)
+    
+  }
+  k.error
+  
+}
+
+
+```
+&lt;span style=&#34;color:#75715e&#34;&gt;## Stepwise&lt;/span&gt;
+
+```{r}
+cv.backward &amp;lt;- function(data = data, n = &amp;#34;fold&amp;#34;, k = &amp;#34;knn-numer&amp;#34;, y = &amp;#34;Class&amp;#34;, direction = &amp;#34;both&amp;#34;){
+  knn.error &amp;lt;- NULL
+  dd &amp;lt;- data[sample(nrow(data), nrow(data), replace = F),]
+  dat.splited &amp;lt;- split(dd, rep(1:n, each=nrow(dd)/(n)))
+
+  for (i in 1:n) {
+    train &amp;lt;- dat.splited[-i]
+    train &amp;lt;- do.call(rbind, train)
+    valid &amp;lt;- dat.splited[[i]]
+    fit.lda &amp;lt;- glm(Y~., data = train, family = binomial() )
+    fit.lda &amp;lt;- step(fit.lda, glm(Y~., data = train, family = binomial()), direction = direction)
+    pred &amp;lt;- predict(fit.lda, newdata = valid, type = &amp;#34;response&amp;#34;)
+    dat.roc &amp;lt;- roc(valid[,y]~pred)
+    thres &amp;lt;- coords(dat.roc,&amp;#34;best&amp;#34;)[1]
+    pred &amp;lt;- ifelse(pred &amp;lt; thres, yes = 0, no = 1)
+    k.error &amp;lt;- mean(pred != valid$Y)
+  }
+ 
+  k.error
+  
+}
+
+err.forward &amp;lt;- cv.backward(data = dat.arr.knn, n = 5, k = 1:100, y = &amp;#34;Y&amp;#34;, direction = &amp;#34;forward&amp;#34;)
+err.stepwise &amp;lt;- cv.backward(data = dat.arr.knn, n = 5, k = 1:100, y = &amp;#34;Y&amp;#34;, direction = &amp;#34;both&amp;#34;)
+
+err.backward &amp;lt;- cv.backward(data = dat.arr.knn, n = 5, k = 1:100, y = &amp;#34;Y&amp;#34;)
+
+
+tbl.aic &amp;lt;- data.frame(error = c(err.stepwise, err.forward,na.omit(err.backward)))
+rownames(tbl.aic) &amp;lt;- c(&amp;#34;Stepwise&amp;#34;, &amp;#34;Forward&amp;#34;, &amp;#34;Backward&amp;#34;)
+
+t(tbl.aic) %&amp;gt;%
+  xtable()
+```
+
+```{r}
+plot(err.multinomial, type = &amp;#34;l&amp;#34;,cex = 0.5, col = &amp;#34;red&amp;#34;, ylim = c(0.2,0.5), 
+xlab = &amp;#34;Number of Variables&amp;#34;)
+lines(err.knn, col = &amp;#34;blue&amp;#34;)
+
+legend(x=&amp;#34;topleft&amp;#34;, legend = c( &amp;#34;Logistic&amp;#34;, &amp;#34;KNN&amp;#34;), col = c( &amp;#34;red&amp;#34;, &amp;#34;blue&amp;#34;), pch = 20)
+
+
+```
+&lt;span style=&#34;color:#75715e&#34;&gt;## Tree&lt;/span&gt;
+
+```{r}
+cv.tree2 &amp;lt;- function(data = data, n = &amp;#34;fold&amp;#34;, k = &amp;#34;knn-numer&amp;#34;, y = &amp;#34;Class&amp;#34;){
+  knn.error &amp;lt;- NULL
+  dd &amp;lt;- data[sample(nrow(data), nrow(data), replace = F),]
+  dat.splited &amp;lt;- split(dd, rep(1:n, each=nrow(dd)/(n)))
+  for (K in k) {
+    k.error &amp;lt;- NULL
+    for (i in 1:n) {
+      train &amp;lt;- dat.splited[-i]
+      train &amp;lt;- do.call(rbind, train)
+      valid &amp;lt;- dat.splited[[i]]
+
+      
+      my.tree &amp;lt;- tree(factor(Y)~., data = train)
+      cv.model.pruned &amp;lt;- prune.misclass(my.tree, best=K)
+      pred &amp;lt;- predict(cv.model.pruned, newdata = valid)[,2]
+      dat.roc &amp;lt;- roc(valid$Y ~ pred)
+      thres &amp;lt;- coords(dat.roc, &amp;#34;best&amp;#34;)[1]
+      pred.knn &amp;lt;- ifelse(pred &amp;lt; thres, yes = 0, no = 1)
+
+      
+      
+      k.error[i] &amp;lt;- mean(pred.knn != valid[,&amp;#34;Y&amp;#34;])
+      }
+    knn.error[K] &amp;lt;- mean(k.error)
+  }
+  
+  z &amp;lt;- data.frame(k = k,
+                  knn.error)
+  z
+}
+
+err.tree &amp;lt;- NULL
+for (i in 2:500) {
+  err.tree[i-1] &amp;lt;- as.numeric(na.omit(cv.tree2(data = dat.arr.tree, n = 5, k = i, y = &amp;#34;Y&amp;#34;)$knn.error))
+
+}
+err.tree
+
+plot(err.tree, type = &amp;#34;l&amp;#34;)
+points(which.min(err.tree), min(err.tree), pch = 20, col = &amp;#34;red&amp;#34;)
+
+```
+
+```{r}
+dat.arr.tree &amp;lt;- dat.arr[,-which(names(dat.arr) == &amp;#34;V14&amp;#34;)]
+
+my.tree &amp;lt;- tree(factor(Y)~., data = dat.arr.tree)
+
+mytree.cv &amp;lt;- cv.tree(my.tree,FUN=prune.misclass,K=10)
+
+plot(x = mytree.cv$size, y = mytree.cv$dev, type = &amp;#34;b&amp;#34;, xlab = &amp;#34;Size&amp;#34;, ylab = &amp;#34;Deviance&amp;#34;)
+points(x = mytree.cv$size[which.min(mytree.cv$dev)], 
+y = mytree.cv$dev[which.min(mytree.cv$dev)], col = &amp;#34;red&amp;#34;)
+
+best.size &amp;lt;- mytree.cv$size[which(mytree.cv$dev==min(mytree.cv$dev))] 
+
+cv.model.pruned &amp;lt;- prune.misclass(my.tree, best=best.size[1])
+
+plot(cv.model.pruned)
+text(cv.model.pruned, use.n=TRUE, all=TRUE, cex=.8)
+```
+&lt;span style=&#34;color:#75715e&#34;&gt;## RF &amp;amp; bag of trees&lt;/span&gt;
+
+```{r}
+hd.imputed &amp;lt;- rfImpute(Y~.-Y,data=dat.arr.tree)
+
+err.rf1 &amp;lt;- list()
+for (i in seq(1, 278, by = 1)) {
+  obj.tree1 &amp;lt;- randomForest(factor(Y)~., data = hd.imputed, mtry=i,ntree=500)
+  err.rf1[[i]] &amp;lt;- (obj.tree1$err.rate[,1])
+  
+}
+
+a &amp;lt;- do.call(cbind, err.rf1)
+err.rf &amp;lt;- apply(a, 2,min)
+
+plot(na.omit(err.rf), type = &amp;#34;l&amp;#34;, ylab = &amp;#34;Error&amp;#34;, xlab = &amp;#34;Split&amp;#34;,
+main = &amp;#34;Random Forest and Bagging of Tree&amp;#34;)
+points(which.min(err.rf),min(err.rf), pch = 20, col = &amp;#34;red&amp;#34;)
+
+```
+&lt;span style=&#34;color:#75715e&#34;&gt;## GBM&lt;/span&gt;
+
+```{r}
+library(Matrix)
+
+##need to exclude missing
+
+train.new &amp;lt;- na.omit(dat.arr.tree)
+test.new &amp;lt;- na.omit(valid)
+
+covariates_matrix = sparse.model.matrix(Y ~ ., data = train.new)[,-1]
+output_vector = train.new[, &amp;#39;Y&amp;#39;] == 1
+
+#covariates_test_matrix = sparse.model.matrix(AHD ~ ., data = test.new)[,-1]
+#output_test_vector = test.new[, &amp;#39;AHD&amp;#39;] == &amp;#34;Yes&amp;#34;
+
+##Create grid of parameters to try 
+xgb_grid = expand.grid(
+  eta = c(0.1, 0.01, 0.001, 0.0001),
+  max_depth = c(1,2)
+)
+
+for(i in 1:nrow(xgb_grid)){
+assign(paste0(&amp;#34;xgb_params.&amp;#34;, i), list(
+  objective = &amp;#34;binary:logistic&amp;#34;,                                               
+  eta = xgb_grid[i,1],                                                                  
+  max.depth = xgb_grid[i,2],                                                               
+  eval_metric = &amp;#34;error&amp;#34;                                                          
+))}
+
+param.list &amp;lt;- list(xgb_params.1, xgb_params.2, xgb_params.3, 
+xgb_params.4, xgb_params.5, xgb_params.6,xgb_params.7,xgb_params.8)
+
+set.seed(12345)
+best.cv.error &amp;lt;- data.frame()
+Eval.cv &amp;lt;- list()
+for(i in 1:nrow(xgb_grid)){
+xgb_cv = xgb.cv(params = param.list[[i]],
+                  data = covariates_matrix,
+                  label = output_vector,
+                  nrounds = 500, 
+                  nfold = 5,                                                  
+                  prediction = TRUE,                                          
+                  showsd = TRUE,                                              
+                  stratified = TRUE,                                          
+                  verbose = TRUE
+)
+
+Eval.cv[[i]] &amp;lt;- xgb_cv$evaluation_log[,c(1,4)]
+best.cv.error[i,1] &amp;lt;- min(Eval.cv[[i]]$test_error_mean)
+}
+
+rownames(best.cv.error) &amp;lt;- c(&amp;#34;eta=0.1, depth=1&amp;#34;, &amp;#34;eta=0.01, depth=1&amp;#34;, &amp;#34;eta=0.001, depth=1&amp;#34;, &amp;#34;eta=0.0001, 
+depth=1&amp;#34;, &amp;#34;eta=0.1, depth=2&amp;#34;, &amp;#34;eta=0.01, depth=2&amp;#34;, &amp;#34;eta=0.001, depth=2&amp;#34;, &amp;#34;eta=0.0001, depth=2&amp;#34;)
+
+which.min(best.cv.error$V1)
+
+
+```
+
+```{r}
+library(&amp;#39;e1071&amp;#39;)
+
+##find shrinakge parameter
+caretGrid.depth.1 &amp;lt;- expand.grid(interaction.depth=1, n.trees = 1000, 
+shrinkage=seq(0, 0.01, by = 0.001), n.minobsinnode=10)
+
+set.seed(123)
+
+gbm.caret.depth.1 &amp;lt;- caret::train(factor(Y) ~ ., distribution = &amp;#34;adaboost&amp;#34;, 
+data = train.new, method = &amp;#34;gbm&amp;#34;, trControl=trainControl(method=&amp;#34;cv&amp;#34;, number=5), 
+verbose=F, tuneGrid=caretGrid.depth.1)
+
+best.tune.1 &amp;lt;- gbm.caret.depth.1$bestTune$shrinkage
+
+names(gbm.caret.depth.1)
+
+gbm.caret.depth.1$results
+
+caretGrid.depth.2 &amp;lt;- expand.grid(interaction.depth=2, n.trees = 1:250, 
+shrinkage=seq(0, 0.01, by = 0.001), n.minobsinnode=10)
+
+set.seed(123)
+gbm.caret.depth.2 &amp;lt;- caret::train(factor(Y) ~ ., distribution = &amp;#34;adaboost&amp;#34;, 
+data = train.new, method = &amp;#34;gbm&amp;#34;, trControl=trainControl(method=&amp;#34;cv&amp;#34;, number=5), 
+verbose=F, tuneGrid=caretGrid.depth.2)
+
+gbm.caret.depth.2$results[,c(1,2,4,5)]
+
+best.tune.2 &amp;lt;- gbm.caret.depth.2$bestTune$shrinkage
+
+##Fit the models with the parameters selected from cross validation
+ada.train &amp;lt;- train.new
+ada.train$AHD &amp;lt;- ifelse(ada.train$AHD==&amp;#34;No&amp;#34;, 0, 1)
+adaboost.depth.1 &amp;lt;- gbm(AHD ~ ., distribution=&amp;#34;adaboost&amp;#34;, data=ada.train, 
+shrinkage=best.tune.1, n.trees=2000)
+adaboost.depth.2 &amp;lt;- gbm(AHD ~ ., distribution=&amp;#34;adaboost&amp;#34;, data=ada.train, 
+shrinkage=best.tune.2, n.trees=2000)
+
+##Predict with 500 trees
+pred.out.ada.depth.1 &amp;lt;- ifelse(predict(adaboost.depth.1, test.new, n.trees = 500, 
+type=&amp;#34;response&amp;#34;) &amp;gt;0.5, &amp;#34;Yes&amp;#34;, &amp;#34;No&amp;#34;)
+misclass.ada.depth.1 &amp;lt;- mean(pred.out.ada.depth.1 != test.new$AHD)
+misclass.ada.depth.1
+```
+
+```{r}
+
+err.ada &amp;lt;- NULL
+
+for (i in 1:250) {
+  caretGrid.depth.2 &amp;lt;- expand.grid(interaction.depth=2, n.trees = i, 
+  shrinkage=seq(0, 0.01, by = 0.001), n.minobsinnode=10)
+  gbm.caret.depth.2 &amp;lt;- caret::train(factor(Y) ~ ., distribution = &amp;#34;adaboost&amp;#34;, 
+  data = train.new, method = &amp;#34;gbm&amp;#34;, trControl=trainControl(method=&amp;#34;cv&amp;#34;, number=5), 
+  verbose=F, tuneGrid=caretGrid.depth.2)
+  err.ada[i] &amp;lt;- gbm.caret.depth.2$results$Accuracy[which.max(gbm.caret.depth.2$results$Accuracy)]
+}
+
+```
+
+```{r}
+
+plot(na.omit(err.rf), type = &amp;#34;l&amp;#34;, ylab = &amp;#34;Error&amp;#34;, xlab = &amp;#34;Trees&amp;#34;, col = &amp;#34;blue&amp;#34;, 
+ylim = c(0.12,0.45), xlim = c(1,240))
+points(which.min(err.rf),min(err.rf), pch = 20, col = &amp;#34;red&amp;#34;)
+
+lines(err.tree, type = &amp;#34;l&amp;#34;, col = &amp;#34;dark blue&amp;#34;)
+points(which.min(err.tree), min(err.tree), pch = 20, col = &amp;#34;red&amp;#34;)
+
+lines(Eval.cv[[1]], col = &amp;#34;green&amp;#34;)
+points(which.min(Eval.cv[[1]]$test_error_mean), min(Eval.cv[[1]]$test_error_mean), 
+pch = 20, col = &amp;#34;red&amp;#34;)
+lines((1-err.ada))
+points(x = which.min(1-err.ada), y = min((1-err.ada)), pch = 20, col = &amp;#34;red&amp;#34;)
+legend(x = &amp;#34;topright&amp;#34;,legend = c(&amp;#34;Ada Boosting&amp;#34;, &amp;#34;Gradience Boosting&amp;#34;,&amp;#34;Randome Forest&amp;#34;, 
+&amp;#34;Simple Tree&amp;#34;), col = c(&amp;#34;black&amp;#34;, &amp;#34;green&amp;#34;, &amp;#34;blue&amp;#34;, &amp;#34;dark blue&amp;#34;), pch = 20)
+
+```
+
+```{r}
+dat.arr.lasso &amp;lt;- na.omit(dat.arr.tree)
+x &amp;lt;- model.matrix(Y~.,dat.arr.lasso)[,-1] # First column corresponds to the intercept and is removed
+y &amp;lt;- dat.arr.lasso$Y
+
+l &amp;lt;- seq(0,1,by = 0.1)
+err.shrinkage &amp;lt;- list()
+for (i in 1:10) {
+  enet.cv = cv.glmnet(x,y,alpha=l[i],nfolds=5)
+  err.shrinkage[[i]] &amp;lt;- (enet.cv$cvm)
+
+  
+}
+
+dat.lasso &amp;lt;- do.call(cbind,err.shrinkage)
+
+dat.lasso[30,] ==  min(err.lasso)
+err.lasso &amp;lt;- apply(dat.lasso, 1, min)
+
+which(dat.lasso == min(err.lasso))
+
+plot(err.lasso, type = &amp;#34;l&amp;#34;, ylab = &amp;#34;Error&amp;#34;, xlab = &amp;#34;Lambda&amp;#34;)
+points(x = 1, err.lasso[1], col = &amp;#34;dark green&amp;#34;, pch = 20)
+points(x = length(err.lasso), err.lasso[length(err.lasso)], col = &amp;#34;blue&amp;#34;, pch = 20)
+points(x = which.min(err.lasso), min(err.lasso), col = &amp;#34;red&amp;#34;, pch = 20)
+legend(x = &amp;#34;top&amp;#34;,legend = c(&amp;#34;Ridge&amp;#34;, &amp;#34;Lasso&amp;#34;,&amp;#34;The Best Elastic&amp;#34;), 
+col = c(&amp;#34;dark green&amp;#34;, &amp;#34;blue&amp;#34;, &amp;#34;red&amp;#34;), pch = 20)
+
+```
+
+```{r}
+tbl.cp &amp;lt;- data.frame(error = c(min(err.logistic), min(err.rf), min(err.stepwise), min(err.lasso) ))
+rownames(tbl.cp) &amp;lt;- c(&amp;#34;logistic&amp;#34;, &amp;#34;random forest&amp;#34;, &amp;#34;stepwise&amp;#34;, &amp;#34;Elastic&amp;#34;)
+(tbl.cp) %&amp;gt;%
+  xtable()
+
+which.min(err.rf)
+```&lt;/code&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;
+&lt;/div&gt;
+&lt;/div&gt;
+</description>
+    </item>
+    
+  </channel>
+</rss>
