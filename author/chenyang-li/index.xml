@@ -2,14 +2,14 @@
 <rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
   <channel>
     <title>Chenyang Li | CSSA NYU Medicine</title>
-    <link>/author/chenyang-li/</link>
-      <atom:link href="/author/chenyang-li/index.xml" rel="self" type="application/rss+xml" />
+    <link>https://NYU-Medicine-CSSA.github.io/author/chenyang-li/</link>
+      <atom:link href="https://NYU-Medicine-CSSA.github.io/author/chenyang-li/index.xml" rel="self" type="application/rss+xml" />
     <description>Chenyang Li</description>
     <generator>Source Themes Academic (https://sourcethemes.com/academic/)</generator><language>en-us</language>
     <image>
-      <url>/images/logo_hu2faecb5e7bc7487633d5aec8c7d7c4d7_7411_300x300_fit_lanczos_2.png</url>
+      <url>https://NYU-Medicine-CSSA.github.io/images/logo_hu2faecb5e7bc7487633d5aec8c7d7c4d7_7411_300x300_fit_lanczos_2.png</url>
       <title>Chenyang Li</title>
-      <link>/author/chenyang-li/</link>
+      <link>https://NYU-Medicine-CSSA.github.io/author/chenyang-li/</link>
     </image>
     
   </channel>
